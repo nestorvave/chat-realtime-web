@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -8,13 +9,25 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        logo: "#0092CA",
+        main: "#030448",
+      },
+      backgroundColor: {
+        softBlue: "#F3F7F8",
+      },
+      keyframes: {
+        bounce: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-30px)" },
+        },
+      },
+      animation: {
+        bouncing: "bounce 3.5s infinite ",
       },
     },
   },
   plugins: [],
 };
+
 export default config;
