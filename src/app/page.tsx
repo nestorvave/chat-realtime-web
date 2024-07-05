@@ -3,11 +3,13 @@ import { LayoutLoginRegister } from "./components/layout-login/layout-login.comp
 import TextInput from "./components/text-input/text-input.component";
 import Button from "./components/button/custom-button.component";
 import { FcGoogle } from "react-icons/fc";
-import { signIn, useSession } from "next-auth/react";
+
+import { useRegister } from "./hooks/useRegister";
 
 export default function Home() {
-  const { data: session } = useSession();
-  console.log(session);
+  const {payload, onAuthCredentials, onAuthGoogle, onHandleChange}= useRegister()
+  const { name, email, password } = payload;
+
   return (
     <LayoutLoginRegister>
       <section className="flex h-[90vh] w-full flex-col items-center justify-center gap-8 md:w-5/12">
@@ -15,37 +17,37 @@ export default function Home() {
         <h2 className="text-xl">Register</h2>
         <div className="w-full">
           <TextInput
-            value={"fffddffdsfdffsdfsfsfsffdfsfdsf"}
+            value={name}
             isRequired
             id="name"
             label="Name"
             name="name"
             type="text"
-            onChange={(e) => {}}
+            onChange={(e) => onHandleChange(e)}
             placeholder="Ingresa tu email"
           />
         </div>
         <div className="w-full">
           <TextInput
-            value={"fffddffdsfdffsdfsfsfsffdfsfdsf"}
+            value={email}
             isRequired
             id="email"
             label="Correo"
             name="email"
             type="text"
-            onChange={(e) => {}}
+            onChange={(e) => onHandleChange(e)}
             placeholder="Ingresa tu email"
           />
         </div>
         <div className="w-full">
           <TextInput
-            value={"fffddffdsfdffsdfsfsfsffdfsfdsf"}
+            value={password}
             isRequired
             id="password"
             label="Contraseña"
             name="password"
-            type="text"
-            onChange={(e) => {}}
+            type="password"
+            onChange={(e) => onHandleChange(e)}
             placeholder="Ingresa tu email"
           />
         </div>
@@ -53,7 +55,7 @@ export default function Home() {
           <Button
             label="Sign up"
             id="sing-up-btn"
-            onClick={() => {}}
+            onClick={onAuthCredentials}
             variant="main"
           />
         </div>
@@ -66,7 +68,7 @@ export default function Home() {
           <Button
             label="Sign Up with Gmail"
             id="sing-up-google-btn"
-            onClick={signIn}
+            onClick={onAuthGoogle}
             variant="white"
             icon={<FcGoogle className="text-2xl" />}
           />

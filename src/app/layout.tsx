@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { GoogleProvider } from "./providers/google-provider";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./store";
+import { ReduxProvider } from "./providers/redux-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GoogleProvider>{children}</GoogleProvider>
+        <ReduxProvider>
+          <GoogleProvider>{children}</GoogleProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

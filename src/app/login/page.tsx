@@ -4,42 +4,49 @@ import TextInput from "../components/text-input/text-input.component";
 import Button from "../components/button/custom-button.component";
 import { FcGoogle } from "react-icons/fc";
 import { LayoutLoginRegister } from "../components/layout-login/layout-login.component";
+import { useLogin } from "./hooks/useLogin";
+import { useSession } from "next-auth/react";
 
 export default function Login() {
+  const { onAuthCredentials, onAuthGoogle, onHandleChange, payload } =
+    useLogin();
+  const { email, password } = payload;
+ 
+
   return (
     <LayoutLoginRegister>
-      <section className="w-full gap-8 flex flex-col items-center h-[90vh] justify-center md:w-1/2">
-        <h1 className="font-bold text-3xl">Realtime chat</h1>
+      <section className="flex h-[90vh] w-full flex-col items-center justify-center gap-8 md:w-1/2">
+        <h1 className="text-3xl font-bold">Realtime chat</h1>
         <h2 className="text-xl">Login</h2>
         <div className="w-2/3">
           <TextInput
-            value={"fffddffdsfdffsdfsfsfsffdfsfdsf"}
+            value={email}
             isRequired
             id="email"
             label="Correo"
             name="email"
             type="text"
-            onChange={(e) => {}}
+            onChange={(e) => onHandleChange(e)}
             placeholder="Ingresa tu email"
           />
         </div>
         <div className="w-2/3">
           <TextInput
-            value={"fffddffdsfdffsdfsfsfsffdfsfdsf"}
+            value={password}
             isRequired
-            id="email"
-            label="Correo"
-            name="email"
-            type="text"
-            onChange={(e) => {}}
-            placeholder="Ingresa tu email"
+            id="password"
+            label="Contraseña"
+            name="password"
+            type="password"
+            onChange={(e) => onHandleChange(e)}
+            placeholder="Ingresa tu contraseña"
           />
         </div>
         <div className="w-1/2">
           <Button
             label="Sign In"
             id="sing-in-btn"
-            onClick={() => {}}
+            onClick={onAuthCredentials}
             variant="main"
           />
         </div>
@@ -52,7 +59,7 @@ export default function Login() {
           <Button
             label="Sign In with Gmail"
             id="sing-in-google-btn"
-            onClick={() => {}}
+            onClick={onAuthGoogle}
             variant="white"
             icon={<FcGoogle className="text-2xl" />}
           />

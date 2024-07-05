@@ -10,7 +10,7 @@ export interface ITextInput {
 	onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 	placeholder?: string;
 	readOnly?: boolean;
-	type: 'text' | 'textarea'; 
+	type: 'text' | 'textarea' | "password"; 
 	value: string;
 	disabled?: boolean;
 	rows?: number; 
