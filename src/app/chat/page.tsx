@@ -7,7 +7,10 @@ import { getCookie } from "cookies-next";
 import socketIOClient, { Socket } from "socket.io-client";
 
 export default function Chat() {
-  const [userSelected, setUserSelected] = useState<string>("");
+  const [userSelected, setUserSelected] = useState<{
+    _id: string;
+    username: string;
+  } | null>(null);
   const [socket, setSocket] = useState<any>(null);
 
   useEffect(() => {

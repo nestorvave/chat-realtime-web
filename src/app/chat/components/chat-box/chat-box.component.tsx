@@ -4,7 +4,10 @@ import React, { useEffect, useState } from "react";
 import { IoSend } from "react-icons/io5";
 
 interface IChatBox {
-  userSelected: string;
+  userSelected: {
+    _id: string;
+    username: string;
+  } | null;
   socket: any;
 }
 
@@ -15,11 +18,13 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
   useEffect(() => {
     if (socket) {
       socket.on("message", (message: any) => {
-        console.log(typeof message);
-      /*   setMessages((prev: any) => [
+        console.log(message)
+        const newMesage = JSON.parse(message);
+        console.log(newMesage.message);
+        setMessages((prev: any) => [
           ...prev,
-          { text: JSON.parse(message).message, isOur: true },
-        ]); */
+          { text: newMesage.message, isOur: false },
+        ]);
       });
     }
   }, [socket]);
@@ -27,12 +32,9 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
   const sendMessage = () => {
     setMessages((prev: any) => [...prev, { text: newMessage, isOur: true }]);
     const payload = {
-      message: {
-        recipient: userSelected,
-        message: newMessage,
-      },
+      recipient: userSelected?._id,
+      message: newMessage,
     };
-    console.log("enviando");
     socket.emit("message", JSON.stringify(payload));
     setNewMessage("");
   };
@@ -49,7 +51,7 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
           alt={""}
           className={"h-12 w-12 rounded-full"}
         />
-        <h2>{userSelected}</h2>
+        <h2>{userSelected?.username}</h2>
       </section>
       <section className="w-10/12">
         {messages.map((msg: any) => (

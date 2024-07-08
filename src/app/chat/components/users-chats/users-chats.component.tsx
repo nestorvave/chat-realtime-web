@@ -8,13 +8,23 @@ import { useSelector } from "react-redux";
 import { getCookie } from "cookies-next";
 
 interface IUsersChat {
-  setUserSelected: React.Dispatch<React.SetStateAction<string>>;
+  setUserSelected: React.Dispatch<
+    React.SetStateAction<{
+      _id: string;
+      username: string;
+    } | null>
+  >;
 }
 
 export const UsersChats = ({ setUserSelected }: IUsersChat) => {
   const [socket, setSocket] = useState<any>();
-  const { name } = useSelector((state: RootState) => state.users);
-  const [online, setOnline] = useState([]);
+  const { _id } = useSelector((state: RootState) => state.users);
+  const [online, setOnline] = useState<
+    {
+      _id: string;
+      username: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     const token = getCookie("token");
@@ -30,9 +40,8 @@ export const UsersChats = ({ setUserSelected }: IUsersChat) => {
   useEffect(() => {
     if (socket) {
       socket.on("online", (users: any) => {
-        console.log("Lista de usuarios conectados:", users);
-        const friends = users.filter((friend: string) => friend !== name);
-        setOnline(_.uniq(friends));
+        const friends = users.filter((friend: any) => friend._id !== _id);
+        setOnline(_.uniqBy(friends, "_id") as any);
       });
       return () => {
         socket.off("online");
@@ -68,7 +77,7 @@ export const UsersChats = ({ setUserSelected }: IUsersChat) => {
               className={"h-14 w-14 rounded-full"}
             />
             <div className="flex w-8/12 flex-col gap-2">
-              <p className="truncate text-white">{user}</p>
+              <p className="truncate text-white">{user?.username}</p>
 
               <p className="w-11/12 truncate text-sm text-white">
                 Lorem ipsum dolor sit amet consecte Earum qui corporis
