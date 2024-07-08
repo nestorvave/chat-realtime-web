@@ -5,6 +5,9 @@ const URLS = {
   },
   USERS:{
     CREATE :"users"
+  },
+  MESSAGES:{
+    GET_BY_BOTH :"messages/get-by-both"
   }
 };
 

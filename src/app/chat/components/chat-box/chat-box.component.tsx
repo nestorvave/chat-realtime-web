@@ -1,7 +1,10 @@
 "use client";
 import TextInput from "@/app/components/text-input/text-input.component";
+import { messagesCase } from "@/app/domain/use-cases/messages/messages.use-case";
+import { RootState } from "@/app/store";
 import React, { useEffect, useState } from "react";
 import { IoSend } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 interface IChatBox {
   userSelected: {
@@ -12,35 +15,57 @@ interface IChatBox {
 }
 
 export const ChatBox = ({ userSelected, socket }: IChatBox) => {
+  const { getBySender } = messagesCase();
   const [newMessage, setNewMessage] = useState<string>("");
   const [messages, setMessages] = useState<any>([]);
-
+  const { _id } = useSelector((state: RootState) => state.users);
+  console.log(_id)
   useEffect(() => {
     if (socket) {
-      socket.on("message", (message: any) => {
-        console.log(message)
-        const newMesage = JSON.parse(message);
-        console.log(newMesage.message);
-        setMessages((prev: any) => [
-          ...prev,
-          { text: newMesage.message, isOur: false },
-        ]);
+      socket.on("message", (response: any) => {
+        if (response.sender !== _id) {
+          setMessages((prev: any) => [
+            ...prev,
+            {
+              message: response.message,
+              isOur: false,
+              recipient: response.recipient,
+              sender: response.sender,
+            },
+          ]);
+        }
       });
     }
   }, [socket]);
 
   const sendMessage = () => {
-    setMessages((prev: any) => [...prev, { text: newMessage, isOur: true }]);
+    setMessages((prev: any) => [...prev, { message: newMessage, isOur: true }]);
+
     const payload = {
       recipient: userSelected?._id,
       message: newMessage,
     };
+    console.log("--->", payload);
     socket.emit("message", JSON.stringify(payload));
     setNewMessage("");
   };
 
-  console.log(messages);
+  const getMessages = async () => {
+    try {
+      const response = await getBySender(_id, userSelected?._id!);
+      if (response) {
+        setMessages(response);
+      }
+    } catch (error) {}
+  };
 
+  useEffect(() => {
+    if(userSelected?._id){
+      getMessages();
+
+    }
+  }, [userSelected]);
+  console.log(messages);
   return (
     <main className="flex h-[95vh] w-full flex-col justify-between pb-1 text-white">
       <section className="flex items-center gap-4 border-b border-gray-600 p-4">
@@ -55,7 +80,7 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
       </section>
       <section className="w-10/12">
         {messages.map((msg: any) => (
-          <div key={msg.text}>{msg.text}</div>
+          <div key={msg.text}>{msg.message}</div>
         ))}
       </section>
       <section className="mb-2 flex w-full items-center justify-center gap-6">
