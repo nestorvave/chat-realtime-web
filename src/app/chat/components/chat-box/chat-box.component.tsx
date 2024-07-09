@@ -19,7 +19,7 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
   const [newMessage, setNewMessage] = useState<string>("");
   const [messages, setMessages] = useState<any>([]);
   const { _id } = useSelector((state: RootState) => state.users);
-  console.log(_id)
+  console.log(_id);
   useEffect(() => {
     if (socket) {
       socket.on("message", (response: any) => {
@@ -60,11 +60,11 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
   };
 
   useEffect(() => {
-    if(userSelected?._id){
+    if (userSelected?._id) {
       getMessages();
-
     }
   }, [userSelected]);
+  console.log(_id);
   console.log(messages);
   return (
     <main className="flex h-[95vh] w-full flex-col justify-between pb-1 text-white">
@@ -78,11 +78,23 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
         />
         <h2>{userSelected?.username}</h2>
       </section>
-      <section className="w-10/12">
-        {messages.map((msg: any) => (
-          <div key={msg.text}>{msg.message}</div>
-        ))}
+      <section className="flex h-full w-full justify-center">
+        <div className="flex w-11/12 flex-col p-6 px-6">
+          {messages.map((msg: any) => (
+            <span
+              className={`flex ${msg.sender === _id ? "justify-end" : "justify-start"} mb-2`}
+              key={msg.id} 
+            >
+              <span
+                className={`rounded-lg p-2 ${msg.sender === _id ? "bg-green-600 text-white" : "bg-blue-600 text-white"}`}
+              >
+                {msg.message}
+              </span>
+            </span>
+          ))}
+        </div>
       </section>
+
       <section className="mb-2 flex w-full items-center justify-center gap-6">
         <div className="w-10/12">
           <TextInput
