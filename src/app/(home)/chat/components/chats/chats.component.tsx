@@ -50,23 +50,16 @@ export const UsersChats = ({ setUserSelected }: IUsersChat) => {
   }, [socket]);
 
   return (
-    <main className="h-[95vh] w-3/12">
-      <section className="w-full border-y-2 border-gray-800 p-4">
-        <TextInput
-          value={""}
-          id="email"
-          name="email"
-          type="text"
-          onChange={(e) => {}}
-          placeholder="Search"
-        />
+    <main className="h-full w-3/12 pl-2">
+      <section className="flex w-full flex-col gap-4 p-4">
+        <h2 className="pl-2 text-2xl text-white">Messages</h2>
       </section>
 
-      <section className="no-scrollbar flex h-[80vh] w-full flex-col gap-3 overflow-auto">
+      <section className="no-scrollbar flex h-[85vh] w-full flex-col overflow-auto px-4">
         {online.map((user, ind) => (
           <div
             key={ind}
-            className="flex w-full cursor-pointer gap-3 border-b-2 border-gray-700 py-5"
+            className="borde flex w-full cursor-pointer items-center gap-3 rounded-xl p-1 hover:bg-grayDark"
             onClick={() => setUserSelected(user)}
           >
             <img

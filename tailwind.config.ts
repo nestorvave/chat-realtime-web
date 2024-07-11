@@ -10,21 +10,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        logo: "#0092CA",
-        main: "#030448",
+        mainDark: "#0E0E11",
+        grayDark: "#3C3D43",
+        whiteDark: "#E6E6E6",
       },
       backgroundColor: {
-        softBlue: "#F3F7F8",
+        mainDark: "#0E0E11",
+        grayDark: "#3C3D43",
+        whiteDark: "#E6E6E6",
       },
-      keyframes: {
-        bounce: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-30px)" },
-        },
-      },
-      animation: {
-        bouncing: "bounce 3.5s infinite ",
-      },
+
     },
   },
   plugins: [],

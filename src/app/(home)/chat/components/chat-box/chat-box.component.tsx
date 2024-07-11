@@ -19,18 +19,17 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
   const [newMessage, setNewMessage] = useState<string>("");
   const [messages, setMessages] = useState<any>([]);
   const { _id } = useSelector((state: RootState) => state.users);
-  console.log(_id);
+
   useEffect(() => {
     if (socket) {
       socket.on("message", (response: any) => {
-        if (response.sender !== _id) {
+        if (response.owner._id !== _id) {
           setMessages((prev: any) => [
             ...prev,
             {
               message: response.message,
-              isOur: false,
               recipient: response.recipient,
-              sender: response.sender,
+              owner: response.owner,
             },
           ]);
         }
@@ -39,13 +38,12 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
   }, [socket]);
 
   const sendMessage = () => {
-    setMessages((prev: any) => [...prev, { message: newMessage, isOur: true }]);
+    setMessages((prev: any) => [...prev, { message: newMessage, sender: _id }]);
 
     const payload = {
       recipient: userSelected?._id,
       message: newMessage,
     };
-    console.log("--->", payload);
     socket.emit("message", JSON.stringify(payload));
     setNewMessage("");
   };
@@ -64,8 +62,7 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
       getMessages();
     }
   }, [userSelected]);
-  console.log(_id);
-  console.log(messages);
+
   return (
     <main className="flex h-[95vh] w-full flex-col justify-between pb-1 text-white">
       <section className="flex items-center gap-4 border-b border-gray-600 p-4">
@@ -80,10 +77,10 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
       </section>
       <section className="flex h-full w-full justify-center">
         <div className="flex w-11/12 flex-col p-6 px-6">
-          {messages.map((msg: any) => (
+          {messages.map((msg: any, index: any) => (
             <span
               className={`flex ${msg.sender === _id ? "justify-end" : "justify-start"} mb-2`}
-              key={msg.id} 
+              key={index}
             >
               <span
                 className={`rounded-lg p-2 ${msg.sender === _id ? "bg-green-600 text-white" : "bg-blue-600 text-white"}`}
