@@ -1,19 +1,11 @@
 import Image from "next/image";
 import React, { ReactNode } from "react";
 
-export const LayoutLoginRegister = ({children}:{children:ReactNode}) => {
+export const LayoutLoginRegister = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="w-full flex">
-      <section className="w-full gap-8 flex flex-col items-center h-[90vh] justify-center md:w-1/2">
+    <main className="flex h-screen w-full items-center justify-center">
+      <section className="flex w-full flex-col items-center justify-center border border-gray-600  md:w-auto">
         {children}
-      </section>
-      <section className="w-1/2 h-[100vh] relative">
-        <Image
-          src="/bg.jpg"
-          alt="Descripción de la imagen"
-          layout="fill"
-          objectFit="cover"
-        />
       </section>
     </main>
   );

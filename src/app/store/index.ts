@@ -1,9 +1,8 @@
 import { configureStore, compose, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-
 import userReducer from "./modules/user.module";
-//import snackbarReducer from './modules/snackbar';
+import selectedUserReducer from "./modules/selected-user.module";
 
 declare global {
   interface Window {
@@ -12,6 +11,7 @@ declare global {
 }
 export const mainReducer = combineReducers({
   users: userReducer,
+  selectedUser: selectedUserReducer,
 });
 
 const persistedReducer = persistReducer(

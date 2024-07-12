@@ -1,28 +1,30 @@
 "use client";
-import { LayoutLoginRegister } from "./components/layout-login/layout-login.component";
-import TextInput from "./components/text-input/text-input.component";
-import Button from "./components/button/custom-button.component";
+import React from "react";
+import TextInput from "../components/text-input/text-input.component";
+import Button from "../components/button/custom-button.component";
+import { LayoutLoginRegister } from "../components/layout-login/layout-login.component";
+import { useRegister } from "./hooks/useRegister";
+import Link from "next/link";
 import { FaGoogle } from "react-icons/fa";
 
-import { useLogin } from "./hooks/useLogin";
-import Link from "next/link";
+export default function Register() {
+  const { payload, onAuthCredentials, onAuthGoogle, onHandleChange } =
+    useRegister();
+  const { name, email, password } = payload;
+ 
 
-export default function Home() {
-  const { onAuthCredentials, onAuthGoogle, onHandleChange, payload } =
-    useLogin();
-  const { email, password } = payload;
   return (
     <LayoutLoginRegister>
-      <section className="text-cente flex flex-col items-center justify-center gap-6 p-16 text-white">
+      <section className="text-cente w-12/12 flex flex-col items-center justify-center gap-6 p-16 text-white">
         <div className="flex w-full flex-col items-center justify-center gap-3">
-          <h1 className="text-3xl font-bold">Welcome back!</h1>
+          <h1 className="text-3xl font-bold">Create an account</h1>
           <h2 className="text-xlr">
-            Sign in to your account or create a new one.
+            Get started with our platform by signing up.
           </h2>
           <div className="w-full">
             <Button
-              label="Sign In with Gmail"
-              id="sing-in-google-btn"
+              label="Sign Up with Gmail"
+              id="sing-up-google-btn"
               onClick={onAuthGoogle}
               variant="dark"
               icon={<FaGoogle className="text-xl text-white" />}
@@ -35,6 +37,18 @@ export default function Home() {
           <div className="w-full border-t-2 border-gray-600"></div>
         </section>
 
+        <div className="w-full">
+          <TextInput
+            value={name}
+            isRequired
+            id="name"
+            label="Username"
+            name="name"
+            type="text"
+            onChange={(e) => onHandleChange(e)}
+            placeholder=""
+          />
+        </div>
         <div className="w-full">
           <TextInput
             value={email}
@@ -61,19 +75,19 @@ export default function Home() {
         </div>
         <div className="w-full">
           <Button
-            label="Sign in"
-            id="sing-in-btn"
+            label="Sign up"
+            id="sing-up-btn"
             onClick={onAuthCredentials}
             variant="white"
           />
         </div>
         <div className="text-muted-foreground text-center text-sm">
-          Don't have an account?{" "}
+          Already have an account?
           <Link
-            href="/register"
+            href="/"
             className="underline underline-offset-4"
           >
-            Register
+            Login
           </Link>
         </div>
       </section>

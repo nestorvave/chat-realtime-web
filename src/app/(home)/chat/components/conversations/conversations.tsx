@@ -4,19 +4,14 @@ import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import socketIOClient from "socket.io-client";
 import { RootState } from "@/app/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCookie } from "cookies-next";
+import { setSelectedUser } from "@/app/store/modules/selected-user.module";
 
-interface IUsersChat {
-  setUserSelected: React.Dispatch<
-    React.SetStateAction<{
-      _id: string;
-      username: string;
-    } | null>
-  >;
-}
 
-export const UsersChats = ({ setUserSelected }: IUsersChat) => {
+
+export const UsersChats = () => {
+  const dispatch = useDispatch()
   const [socket, setSocket] = useState<any>();
   const { _id } = useSelector((state: RootState) => state.users);
   const [online, setOnline] = useState<
@@ -60,7 +55,7 @@ export const UsersChats = ({ setUserSelected }: IUsersChat) => {
           <div
             key={ind}
             className="borde flex w-full cursor-pointer items-center gap-3 rounded-xl p-1 hover:bg-grayDark"
-            onClick={() => setUserSelected(user)}
+            onClick={() => dispatch(setSelectedUser(user))}
           >
             <img
               src={

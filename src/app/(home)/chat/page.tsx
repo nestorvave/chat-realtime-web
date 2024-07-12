@@ -1,17 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { UsersChats } from "./components/chats/chats.component";
+import { UsersChats } from "./components/conversations/conversations";
 import { ChatBox } from "./components/chat-box/chat-box.component";
 import _ from "lodash";
 import { getCookie } from "cookies-next";
 import socketIOClient, { Socket } from "socket.io-client";
 import { EmptyScreen } from "../(components)/components/empty-screen/empty-screen";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 export default function Chat() {
-  const [userSelected, setUserSelected] = useState<{
-    _id: string;
-    username: string;
-  } | null>(null);
+  const { _id } = useSelector((state: RootState) => state.selectedUser);
   const [socket, setSocket] = useState<any>(null);
 
   useEffect(() => {
@@ -26,9 +25,9 @@ export default function Chat() {
   }, []);
   return (
     <main className="flex w-full">
-      <UsersChats setUserSelected={setUserSelected} />
-      {userSelected ? (
-        <ChatBox userSelected={userSelected} socket={socket} />
+      <UsersChats  />
+      {_id ? (
+        <ChatBox socket={socket} />
       ) : (
         <EmptyScreen />
       )}

@@ -2,12 +2,10 @@
 import { AiFillMessage } from "react-icons/ai";
 import { PiUsersFill } from "react-icons/pi";
 
-
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 export const ActionsBar = () => {
   const currentPath = usePathname();
-
 
   const links = [
     { link: "/users", icon: <AiFillMessage /> },
@@ -23,6 +21,7 @@ export const ActionsBar = () => {
             className={`flex w-full cursor-pointer ${currentPath === link ? "bg-grayDark text-whiteDark hover:bg-grayDark" : "text-grayDark hover:bg-grayDark hover:text-whiteDark"} items-center justify-center rounded-lg p-3 text-2xl`}
             href={link}
             passHref
+            key={link}
           >
             {icon}
           </Link>

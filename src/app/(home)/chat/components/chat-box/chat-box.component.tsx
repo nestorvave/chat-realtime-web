@@ -7,18 +7,15 @@ import { IoSend } from "react-icons/io5";
 import { useSelector } from "react-redux";
 
 interface IChatBox {
-  userSelected: {
-    _id: string;
-    username: string;
-  } | null;
   socket: any;
 }
 
-export const ChatBox = ({ userSelected, socket }: IChatBox) => {
+export const ChatBox = ({ socket }: IChatBox) => {
   const { getBySender } = messagesCase();
   const [newMessage, setNewMessage] = useState<string>("");
   const [messages, setMessages] = useState<any>([]);
   const { _id } = useSelector((state: RootState) => state.users);
+  const userSelected = useSelector((state: RootState) => state.selectedUser);
 
   useEffect(() => {
     if (socket) {
@@ -73,7 +70,7 @@ export const ChatBox = ({ userSelected, socket }: IChatBox) => {
           alt={""}
           className={"h-12 w-12 rounded-full"}
         />
-        <h2>{userSelected?.username}</h2>
+        <h2>{userSelected?.name}</h2>
       </section>
       <section className="flex h-full w-full justify-center">
         <div className="flex w-11/12 flex-col p-6 px-6">

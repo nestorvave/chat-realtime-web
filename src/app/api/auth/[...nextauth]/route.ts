@@ -15,7 +15,6 @@ export const handler = NextAuth({
 
       if (user) {
         try {
-          // Llama a la acción de login o auth solo una vez
           const response = await loginAction({
             email: user.email,
             avatarUrl: user.image,

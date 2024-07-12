@@ -1,12 +1,17 @@
-
-'use client'
-import React from 'react'
-import { useUsers } from '../hooks/useUsers';
-import TextInput from '@/app/components/text-input/text-input.component';
-import Image from 'next/image';
+"use client";
+import React from "react";
+import { useUsers } from "../hooks/useUsers";
+import TextInput from "@/app/components/text-input/text-input.component";
+import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { setSelectedUser } from "@/app/store/modules/selected-user.module";
+import { useRouter } from "next/navigation";
 
 export const UserList = () => {
-	  const { users, search, setSearch } = useUsers();
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { users, search, setSearch } = useUsers();
+
   return (
     <main className="h-full w-3/12 pl-2">
       <section className="flex w-full flex-col gap-4 p-4">
@@ -22,10 +27,14 @@ export const UserList = () => {
       </section>
 
       <section className="no-scrollbar flex h-[85vh] w-full flex-col overflow-auto px-4">
-        {users.map((user, ind) => (
+        {users.map((user) => (
           <div
             key={user._id}
             className="borde flex w-full cursor-pointer items-center gap-3 rounded-xl p-1 hover:bg-grayDark"
+            onClick={() => {
+              dispatch(setSelectedUser(user));
+              router.push("/chat");
+            }}
           >
             <Image
               src={
@@ -44,4 +53,4 @@ export const UserList = () => {
       </section>
     </main>
   );
-}
+};
