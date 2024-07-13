@@ -8,10 +8,8 @@ import { setSelectedUser } from "@/app/store/modules/selected-user.module";
 import { useRouter } from "next/navigation";
 
 export const UserList = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const { users, search, setSearch } = useUsers();
-
+  const { users, search, setSearch, createConversation } = useUsers();
+  
   return (
     <main className="h-full w-3/12 pl-2">
       <section className="flex w-full flex-col gap-4 p-4">
@@ -31,10 +29,7 @@ export const UserList = () => {
           <div
             key={user._id}
             className="borde flex w-full cursor-pointer items-center gap-3 rounded-xl p-1 hover:bg-grayDark"
-            onClick={() => {
-              dispatch(setSelectedUser(user));
-              router.push("/chat");
-            }}
+            onClick={() => createConversation(user)}
           >
             <Image
               src={

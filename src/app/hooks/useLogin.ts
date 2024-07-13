@@ -36,7 +36,8 @@ export const useLogin = () => {
 
   const onAuthGoogle = async (): Promise<void> => {
     try {
-      const user = await signIn();
+      await signIn();
+      router.push("/chat");
     } catch (error) {}
   };
 

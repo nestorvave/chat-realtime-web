@@ -1,4 +1,5 @@
-import { EmptyScreen } from "../(components)/components/empty-screen/empty-screen";
+
+import { EmptyScreen } from "../components/empty-screen/empty-screen";
 import { UserList } from "./components/user-list.component";
 
 function page() {

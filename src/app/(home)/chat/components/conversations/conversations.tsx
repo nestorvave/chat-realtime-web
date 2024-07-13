@@ -7,11 +7,13 @@ import { RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getCookie } from "cookies-next";
 import { setSelectedUser } from "@/app/store/modules/selected-user.module";
+import { useConversations } from "./hooks/useConversations";
+import Image from "next/image";
+import Link from "next/link";
 
-
-
-export const UsersChats = () => {
-  const dispatch = useDispatch()
+export const Conversations = () => {
+  const dispatch = useDispatch();
+  const { conversations } = useConversations();
   const [socket, setSocket] = useState<any>();
   const { _id } = useSelector((state: RootState) => state.users);
   const [online, setOnline] = useState<
@@ -31,7 +33,7 @@ export const UsersChats = () => {
       }),
     );
   }, []);
-
+  console.log(".---", conversations);
   useEffect(() => {
     if (socket) {
       socket.on("online", (users: any) => {
@@ -51,30 +53,34 @@ export const UsersChats = () => {
       </section>
 
       <section className="no-scrollbar flex h-[85vh] w-full flex-col overflow-auto px-4">
-        {online.map((user, ind) => (
-          <div
-            key={ind}
-            className="borde flex w-full cursor-pointer items-center gap-3 rounded-xl p-1 hover:bg-grayDark"
-            onClick={() => dispatch(setSelectedUser(user))}
+        {conversations.map((conversation, ind) => (
+          <Link
+            href={`/chat/${conversation._id}`}
+            className="hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark"
+            prefetch={false}
           >
-            <img
+            <Image
               src={
+                conversation?.recipient.avatarUrl ||
                 "https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/1/0/e/10e6c0a439e17280a6f3fa6ae059819af5517efd.png"
               }
-              alt={""}
+              alt={`${conversation?.recipient.name} avatar`}
               className={"h-14 w-14 rounded-full"}
+              width={400}
+              height={500}
             />
-            <div className="flex w-8/12 flex-col gap-2">
-              <p className="truncate text-white">{user?.username}</p>
-
-              <p className="w-11/12 truncate text-sm text-white">
-                Lorem ipsum dolor sit amet consecte Earum qui corporis
-                asperiores? Reprehenderit obcaecati at velit illo perspiciatis
-                in nihil? Aspernatur.
-              </p>
-            </div>
-            <span className="w-full text-xs text-white">3min ago</span>
-          </div>
+            <section className="grid flex-1 gap-1">
+              <div className="flex items-center justify-between">
+                <p>{conversation.recipient.name}</p>
+                <p className="text-muted-foreground text-xs">2h</p>
+              </div>
+              <div
+                className={`text-sm w-full line-clamp-1 ${conversation?.last_message?.toUpperCase() === "CREATE CONVERSATION" && "font-bold"}`}
+              >
+                {conversation?.last_message || "Create conversation"}
+              </div>
+            </section>
+          </Link>
         ))}
       </section>
     </main>

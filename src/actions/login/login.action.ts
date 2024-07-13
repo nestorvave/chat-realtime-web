@@ -9,5 +9,6 @@ export async function loginAction(body: any) {
     body: JSON.stringify(body),
   });
   const result = await response.json();
+  console.log(result);
   return result;
 }

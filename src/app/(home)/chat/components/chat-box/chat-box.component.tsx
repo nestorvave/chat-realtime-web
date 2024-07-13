@@ -8,9 +8,10 @@ import { useSelector } from "react-redux";
 
 interface IChatBox {
   socket: any;
+  slug: string;
 }
 
-export const ChatBox = ({ socket }: IChatBox) => {
+export const ChatBox = ({ socket, slug }: IChatBox) => {
   const { getBySender } = messagesCase();
   const [newMessage, setNewMessage] = useState<string>("");
   const [messages, setMessages] = useState<any>([]);

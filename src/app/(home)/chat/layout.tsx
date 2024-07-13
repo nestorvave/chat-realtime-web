@@ -1,10 +1,11 @@
 import React, { ReactNode } from "react";
-import { ActionsBar } from "./components/actions-bar/actions-bar.component";
+import { Conversations } from "./components/conversations/conversations";
+
 
 export default function layout({ children }: { children: ReactNode }) {
   return (
     <main className="flex">
-      <ActionsBar />
+      <Conversations />
       <section className="w-full">{children}</section>
     </main>
   );
