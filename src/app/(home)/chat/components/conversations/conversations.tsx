@@ -33,7 +33,6 @@ export const Conversations = () => {
       }),
     );
   }, []);
-  console.log(".---", conversations);
   useEffect(() => {
     if (socket) {
       socket.on("online", (users: any) => {
@@ -53,11 +52,13 @@ export const Conversations = () => {
       </section>
 
       <section className="no-scrollbar flex h-[85vh] w-full flex-col overflow-auto px-4">
-        {conversations.map((conversation, ind) => (
+        {conversations.map((conversation) => (
           <Link
             href={`/chat/${conversation._id}`}
             className="hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark"
             prefetch={false}
+            key={conversation._id}
+            onClick={() => dispatch(setSelectedUser(conversation.recipient))}
           >
             <Image
               src={
@@ -75,7 +76,7 @@ export const Conversations = () => {
                 <p className="text-muted-foreground text-xs">2h</p>
               </div>
               <div
-                className={`text-sm w-full line-clamp-1 ${conversation?.last_message?.toUpperCase() === "CREATE CONVERSATION" && "font-bold"}`}
+                className={`line-clamp-1 w-full text-sm ${conversation?.last_message?.toUpperCase() === "CREATE CONVERSATION" && "font-bold"}`}
               >
                 {conversation?.last_message || "Create conversation"}
               </div>

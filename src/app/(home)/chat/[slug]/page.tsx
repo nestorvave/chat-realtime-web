@@ -2,15 +2,12 @@
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { getCookie } from "cookies-next";
-import socketIOClient, { Socket } from "socket.io-client";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
-import { Conversations } from "../components/conversations/conversations";
+import socketIOClient from "socket.io-client";
 import { ChatBox } from "../components/chat-box/chat-box.component";
 
-export default function Chat({ slug }: { slug: string }) {
+export default function Chat({ params }: { params: { slug: string } }) {
   const [socket, setSocket] = useState<any>(null);
-
+  const {slug }= params;
   useEffect(() => {
     const token = getCookie("token");
     setSocket(

@@ -11,18 +11,15 @@ export const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-      console.log("SEESSSIOOON")
       const { user } = session;
       if (user) {
         try {
-          const response = await loginAction({
+          await loginAction({
             email: user.email,
             avatarUrl: user.image,
             name: user.name,
             password: "zizu",
           });
-        
-
         } catch (error) {
           console.error("Error en la acción de login:", error);
         }

@@ -12,7 +12,7 @@ interface IChatBox {
 }
 
 export const ChatBox = ({ socket, slug }: IChatBox) => {
-  const { getBySender } = messagesCase();
+  const { create } = messagesCase();
   const [newMessage, setNewMessage] = useState<string>("");
   const [messages, setMessages] = useState<any>([]);
   const { _id } = useSelector((state: RootState) => state.users);
@@ -35,9 +35,8 @@ export const ChatBox = ({ socket, slug }: IChatBox) => {
     }
   }, [socket]);
 
-  const sendMessage = () => {
+  const sendMessage = async() => {
     setMessages((prev: any) => [...prev, { message: newMessage, sender: _id }]);
-
     const payload = {
       recipient: userSelected?._id,
       message: newMessage,
@@ -46,18 +45,18 @@ export const ChatBox = ({ socket, slug }: IChatBox) => {
     setNewMessage("");
   };
 
-  const getMessages = async () => {
+/*   const getMessages = async () => {
     try {
       const response = await getBySender(_id, userSelected?._id!);
       if (response) {
         setMessages(response);
       }
     } catch (error) {}
-  };
+  }; */
 
   useEffect(() => {
     if (userSelected?._id) {
-      getMessages();
+   /*    getMessages(); */
     }
   }, [userSelected]);
 

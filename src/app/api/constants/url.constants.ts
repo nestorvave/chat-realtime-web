@@ -10,7 +10,7 @@ const URLS = {
     CREATE :"conversations"
   },
   MESSAGES:{
-    GET_BY_BOTH :"messages/get-by-both"
+    CREATE :"messages"
   }
 
 };
