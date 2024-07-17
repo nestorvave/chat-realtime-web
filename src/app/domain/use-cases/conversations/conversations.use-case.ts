@@ -1,14 +1,17 @@
 import URLS from "@/app/api/constants/url.constants";
 import { axiosInstance } from "@/app/api/tools/api";
 import {
+  IGetConversation,
   ICreateConversation,
-  IPayloadConversation,
+  IAllConversations,
 } from "../../models/conversations/conversations.model";
 
 export const conversationsCase = () => {
-  const create = async (payload: IPayloadConversation) => {
+  const create = async (
+    payload: ICreateConversation,
+  ): Promise<IGetConversation> => {
     try {
-      const response = await axiosInstance.post<ICreateConversation>(
+      const response = await axiosInstance.post<IGetConversation>(
         URLS.CONVERSATIONS.CREATE,
         payload,
       );
@@ -21,7 +24,7 @@ export const conversationsCase = () => {
 
   const getConversationByUser = async (_id: string) => {
     try {
-      const response = await axiosInstance.get<ICreateConversation[]>(
+      const response = await axiosInstance.get<IAllConversations[]>(
         `${URLS.CONVERSATIONS.CREATE}/${_id}`,
       );
       console.log("here", response.data);

@@ -1,5 +1,4 @@
 "use client";
-import TextInput from "@/app/components/text-input/text-input.component";
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import socketIOClient from "socket.io-client";
@@ -33,7 +32,7 @@ export const Conversations = () => {
       }),
     );
   }, []);
-  console.log(".---", conversations);
+
   useEffect(() => {
     if (socket) {
       socket.on("online", (users: any) => {
@@ -58,6 +57,8 @@ export const Conversations = () => {
             href={`/chat/${conversation._id}`}
             className="hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark"
             prefetch={false}
+            onClick={() => dispatch(setSelectedUser(conversation.recipient))}
+            key={conversation._id}
           >
             <Image
               src={
@@ -75,7 +76,7 @@ export const Conversations = () => {
                 <p className="text-muted-foreground text-xs">2h</p>
               </div>
               <div
-                className={`text-sm w-full line-clamp-1 ${conversation?.last_message?.toUpperCase() === "CREATE CONVERSATION" && "font-bold"}`}
+                className={`line-clamp-1 w-full text-sm ${conversation?.last_message?.toUpperCase() === "CREATE CONVERSATION" && "font-bold"}`}
               >
                 {conversation?.last_message || "Create conversation"}
               </div>

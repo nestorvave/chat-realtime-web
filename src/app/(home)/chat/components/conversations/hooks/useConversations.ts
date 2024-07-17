@@ -1,11 +1,11 @@
-import { ICreateConversation } from "@/app/domain/models/conversations/conversations.model";
+import { IAllConversations, ICreateConversation } from "@/app/domain/models/conversations/conversations.model";
 import { conversationsCase } from "@/app/domain/use-cases/conversations/conversations.use-case";
 import { RootState } from "@/app/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export const useConversations = () => {
-  const [conversations, setConversations] = useState<ICreateConversation[]>([]);
+  const [conversations, setConversations] = useState<IAllConversations[]>([]);
   const { _id } = useSelector((state: RootState) => state.users);
   const { getConversationByUser } = conversationsCase();
 
