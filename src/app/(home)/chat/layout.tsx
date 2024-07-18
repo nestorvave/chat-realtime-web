@@ -3,6 +3,7 @@ import { Conversations } from "./components/conversations/conversations";
 
 
 export default function layout({ children }: { children: ReactNode }) {
+    
   return (
     <main className="flex">
       <Conversations />

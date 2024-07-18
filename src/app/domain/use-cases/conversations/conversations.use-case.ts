@@ -15,7 +15,7 @@ export const conversationsCase = () => {
         URLS.CONVERSATIONS.CREATE,
         payload,
       );
-      console.log("here", response.data);
+  
       return response.data;
     } catch (err: unknown) {
       throw new Error("ffdf");
@@ -27,7 +27,6 @@ export const conversationsCase = () => {
       const response = await axiosInstance.get<IAllConversations[]>(
         `${URLS.CONVERSATIONS.CREATE}/${_id}`,
       );
-      console.log("here", response.data);
       return response.data;
     } catch (err: unknown) {
       throw new Error("ffdf");

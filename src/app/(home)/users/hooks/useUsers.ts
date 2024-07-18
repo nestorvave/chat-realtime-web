@@ -19,7 +19,7 @@ export const useUsers = () => {
   const getData = async () => {
     try {
       const response = await getAllUsers();
-      setUsers(response);
+      setUsers(response.filter((user) => user._id !== owner));
     } catch (error) {}
   };
 

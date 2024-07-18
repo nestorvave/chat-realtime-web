@@ -8,9 +8,9 @@ export const ActionsBar = () => {
   const currentPath = usePathname();
 
   const links = [
-    { link: "/users", icon: <AiFillMessage /> },
-    { link: "/chat", icon: <PiUsersFill /> },
-    { link: "/", icon: <PiUsersFill /> },
+    { link: "/chat", icon: <AiFillMessage /> },
+    { link: "/users", icon: <PiUsersFill /> },
+    { link: "/register", icon: <PiUsersFill /> },
   ];
 
   return (
@@ -18,7 +18,7 @@ export const ActionsBar = () => {
       <section className="mt-4 flex w-9/12 flex-col gap-4">
         {links.map(({ link, icon }) => (
           <Link
-            className={`flex w-full cursor-pointer ${currentPath === link ? "bg-grayDark text-whiteDark hover:bg-grayDark" : "text-grayDark hover:bg-grayDark hover:text-whiteDark"} items-center justify-center rounded-lg p-3 text-2xl`}
+            className={`flex w-full cursor-pointer ${currentPath.includes(link) ? "bg-grayDark text-whiteDark hover:bg-grayDark" : "text-grayDark hover:bg-grayDark hover:text-whiteDark"} items-center justify-center rounded-lg p-3 text-2xl`}
             href={link}
             passHref
             key={link}

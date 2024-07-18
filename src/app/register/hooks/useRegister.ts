@@ -28,8 +28,6 @@ export const useRegister = () => {
     try {
       const response = await registerUser(payload);
       if (response) {
-        
-        console.log(response);
         const { token, name, email, _id } = response;
         dispatch(setUser({ name, email, _id, isLogged: true }));
         setCookie("token", token);

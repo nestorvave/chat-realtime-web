@@ -8,67 +8,53 @@ import { getCookie } from "cookies-next";
 import { setSelectedUser } from "@/app/store/modules/selected-user.module";
 import { useConversations } from "./hooks/useConversations";
 import Image from "next/image";
+
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useSocketContext } from "@/app/(home)/context/socket.context";
+import { Avatar } from "@/app/components/avatar/avatar.component";
 
 export const Conversations = () => {
+  const { socket } = useSocketContext();
   const dispatch = useDispatch();
   const { conversations } = useConversations();
-  const [socket, setSocket] = useState<any>();
   const { _id } = useSelector((state: RootState) => state.users);
-  const [online, setOnline] = useState<
-    {
-      _id: string;
-      username: string;
-    }[]
-  >([]);
-
-  useEffect(() => {
-    const token = getCookie("token");
-    setSocket(
-      socketIOClient("http://localhost:4000", {
-        query: {
-          token: token,
-        },
-      }),
-    );
-  }, []);
+  console.log(_id);
+  const selectedUser = useSelector((state: RootState) => state.selectedUser);
+  const [online, setOnline] = useState<string[]>([]);
 
   useEffect(() => {
     if (socket) {
       socket.on("online", (users: any) => {
-        const friends = users.filter((friend: any) => friend._id !== _id);
-        setOnline(_.uniqBy(friends, "_id") as any);
+        console.log("........", users);
+        const friends = users.filter((friend: any) => friend !== _id);
+        console.log("friends", friends);
+        setOnline(_.uniq(friends));
       });
       return () => {
         socket.off("online");
       };
     }
   }, [socket]);
-
+  console.log(online);
   return (
     <main className="h-full w-3/12 pl-2">
       <section className="flex w-full flex-col gap-4 p-4">
         <h2 className="pl-2 text-2xl text-white">Messages</h2>
       </section>
-
       <section className="no-scrollbar flex h-[85vh] w-full flex-col overflow-auto px-4">
         {conversations.map((conversation, ind) => (
           <Link
             href={`/chat/${conversation._id}`}
-            className="hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark"
+            className={`${selectedUser._id === conversation.recipient._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
             prefetch={false}
             onClick={() => dispatch(setSelectedUser(conversation.recipient))}
             key={conversation._id}
           >
-            <Image
-              src={
-                conversation?.recipient.avatarUrl ||
-                "https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/1/0/e/10e6c0a439e17280a6f3fa6ae059819af5517efd.png"
-              }
-              alt={`${conversation?.recipient.name} avatar`}
-              className={"h-14 w-14 rounded-full"}
-              width={400}
-              height={500}
+            <Avatar
+              avatarUrl={conversation.recipient.avatarUrl || ""}
+              username={conversation.recipient.name}
+              online={online.includes(conversation.recipient._id.toString())}
             />
             <section className="grid flex-1 gap-1">
               <div className="flex items-center justify-between">

@@ -3,9 +3,7 @@ import React from "react";
 import { useUsers } from "../hooks/useUsers";
 import TextInput from "@/app/components/text-input/text-input.component";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
-import { setSelectedUser } from "@/app/store/modules/selected-user.module";
-import { useRouter } from "next/navigation";
+
 
 export const UserList = () => {
   const { users, search, setSearch, createConversation } = useUsers();
