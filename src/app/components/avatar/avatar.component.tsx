@@ -18,7 +18,6 @@ export const Avatar = ({
 }: IAvatar) => {
   const getInitials = (name: string): string => {
     const names = name.split(" ");
-    console.log(names);
     return names.map((name) => name.charAt(0).toUpperCase()).join("");
   };
   return (

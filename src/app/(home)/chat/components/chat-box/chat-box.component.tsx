@@ -19,7 +19,7 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
 
   const { messages, sendMessage, newMessage, setNewMessage, chatRef } =
     useChatbox(socket, conversation_id);
-  
+
   return (
     <main className="max-h-[99vh flex h-[99vh] w-full flex-col justify-between pb-1 text-white">
       <section className="flex items-center gap-4 border-b border-gray-600 py-4">
@@ -34,18 +34,20 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
         className="no-scrollbar mb-4 flex h-[85%] w-full justify-center overflow-auto px-5 pt-4"
       >
         <div className="flex w-full flex-col">
-          {messages.map(({ _id: id, message, owner }: IMessage) => (
-            <span
-              className={`flex ${owner === _id ? "justify-end" : "justify-start"} mb-2`}
-              key={id}
-            >
+          {messages.map(
+            ({ _id: id, message, owner }: IMessage, idx: number) => (
               <span
-                className={`max-w-[50%] rounded-3xl p-4 ${owner === _id ? "bg-whiteDark text-mainDark" : "bg-grayDark text-whiteDark"}`}
+                key={id || idx}
+                className={`flex ${owner === _id ? "justify-end" : "justify-start"} mb-2`}
               >
-                {message}
+                <span
+                  className={`max-w-[50%] rounded-3xl p-4 ${owner === _id ? "bg-whiteDark text-mainDark" : "bg-grayDark text-whiteDark"}`}
+                >
+                  {message}
+                </span>
               </span>
-            </span>
-          ))}
+            ),
+          )}
         </div>
       </section>
 

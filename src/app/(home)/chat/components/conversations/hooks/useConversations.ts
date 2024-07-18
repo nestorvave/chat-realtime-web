@@ -5,10 +5,12 @@ import {
 import { conversationsCase } from "@/app/domain/use-cases/conversations/conversations.use-case";
 import { RootState } from "@/app/store";
 import { setSelectedUser } from "@/app/store/modules/selected-user.module";
+import { cloneDeep } from "lodash";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Socket } from "socket.io-client";
 
-export const useConversations = () => {
+export const useConversations = (socket: Socket | null) => {
   const dispatch = useDispatch();
   const [conversations, setConversations] = useState<IAllConversations[]>([]);
   const { _id } = useSelector((state: RootState) => state.users);
@@ -43,6 +45,28 @@ export const useConversations = () => {
   useEffect(() => {
     getConversations();
   }, []);
+
+  console.log(conversations);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("message", (response: any) => {
+        const updatedChats = cloneDeep(conversations);
+        const chats = updatedChats.map((conversation) => {
+          if (conversation._id === response.conversation_id) {
+            conversation.last_message = response.message;
+            return {
+              ...conversation,
+              last_message: response.message,
+            };
+          }
+          return conversation;
+        });
+        setConversations(updatedChats);
+      });
+    }
+  }, [socket]);
+ 
 
   return { getConversations, conversations };
 };

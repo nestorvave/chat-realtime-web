@@ -17,18 +17,15 @@ import { Avatar } from "@/app/components/avatar/avatar.component";
 export const Conversations = () => {
   const { socket } = useSocketContext();
   const dispatch = useDispatch();
-  const { conversations } = useConversations();
+  const { conversations } = useConversations(socket);
   const { _id } = useSelector((state: RootState) => state.users);
-  console.log(_id);
   const selectedUser = useSelector((state: RootState) => state.selectedUser);
   const [online, setOnline] = useState<string[]>([]);
 
   useEffect(() => {
     if (socket) {
       socket.on("online", (users: any) => {
-        console.log("........", users);
         const friends = users.filter((friend: any) => friend !== _id);
-        console.log("friends", friends);
         setOnline(_.uniq(friends));
       });
       return () => {
@@ -36,7 +33,9 @@ export const Conversations = () => {
       };
     }
   }, [socket]);
-  console.log(online);
+
+
+
   return (
     <main className="h-full w-3/12 pl-2">
       <section className="flex w-full flex-col gap-4 p-4">
