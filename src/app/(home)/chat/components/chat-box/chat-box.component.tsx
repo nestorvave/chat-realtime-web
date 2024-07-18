@@ -1,73 +1,25 @@
-"use client";
+import { useSocketContext } from "@/app/(home)/context/socket.context";
 import { Avatar } from "@/app/components/avatar/avatar.component";
 import TextInput from "@/app/components/text-input/text-input.component";
 import { IMessage } from "@/app/domain/models/messages/messages.model";
-import { messagesCase } from "@/app/domain/use-cases/messages/messages.use-case";
 import { RootState } from "@/app/store";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { IoSend } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import { useChatbox } from "./hooks/useChatbox";
 
 interface IChatBox {
-  socket: any;
   conversation_id: string;
 }
 
-export const ChatBox = ({ socket, conversation_id }: IChatBox) => {
-  const { getByConversation } = messagesCase();
-  const [newMessage, setNewMessage] = useState<string>("");
-  const [messages, setMessages] = useState<IMessage[]>([]);
+export const ChatBox = ({ conversation_id }: IChatBox) => {
   const { _id } = useSelector((state: RootState) => state.users);
+  const { socket } = useSocketContext();
   const userSelected = useSelector((state: RootState) => state.selectedUser);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("message", (response: any) => {
-        if (response.owner !== _id) {
-          setMessages((prev: any) => [
-            ...prev,
-            {
-              message: response.message,
-              recipient: response.recipient,
-              owner: response.owner,
-            },
-          ]);
-        }
-      });
-    }
-  }, [socket]);
-
-  const sendMessage = () => {
-    setMessages((prev: any) => [
-      ...prev,
-      { message: newMessage, owner: _id, recipient: userSelected._id },
-    ]);
-
-    const payload = {
-      recipient: userSelected?._id,
-      message: newMessage,
-      owner: _id,
-      conversation_id,
-    };
-    socket.emit("message", JSON.stringify(payload));
-    setNewMessage("");
-  };
-
-  const getMessages = async () => {
-    try {
-      const response = await getByConversation(conversation_id);
-      if (response) {
-        setMessages(response);
-      }
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    if (userSelected?._id) {
-      getMessages();
-    }
-  }, [userSelected]);
+  const { messages, sendMessage, newMessage, setNewMessage, chatRef } =
+    useChatbox(socket, conversation_id);
+  
   return (
     <main className="max-h-[99vh flex h-[99vh] w-full flex-col justify-between pb-1 text-white">
       <section className="flex items-center gap-4 border-b border-gray-600 py-4">
@@ -77,7 +29,10 @@ export const ChatBox = ({ socket, conversation_id }: IChatBox) => {
         />
         <h2>{userSelected?.name}</h2>
       </section>
-      <section className="no-scrollbar mb-4 flex h-[85%] w-full justify-center overflow-auto px-5 pt-4">
+      <section
+        ref={chatRef}
+        className="no-scrollbar mb-4 flex h-[85%] w-full justify-center overflow-auto px-5 pt-4"
+      >
         <div className="flex w-full flex-col">
           {messages.map(({ _id: id, message, owner }: IMessage) => (
             <span

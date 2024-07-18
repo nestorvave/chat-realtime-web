@@ -13,22 +13,9 @@ export default function Chat({
 }: {
   params: { conversation_id: string };
 }) {
-  const [socket, setSocket] = useState<any>(null);
-
-  useEffect(() => {
-    const token = getCookie("token");
-    setSocket(
-      socketIOClient("http://localhost:4000", {
-        query: {
-          token: token,
-        },
-      }),
-    );
-  }, []);
-
   return (
     <main className="flex w-full">
-      <ChatBox socket={socket} conversation_id={params.conversation_id} />
+      <ChatBox conversation_id={params.conversation_id} />
     </main>
   );
 }
