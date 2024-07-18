@@ -46,27 +46,26 @@ export const useConversations = (socket: Socket | null) => {
     getConversations();
   }, []);
 
-  console.log(conversations);
 
   useEffect(() => {
+    const handleMessage = (response: any) => {
+      setConversations((prevConversations) =>
+        prevConversations.map((conversation) =>
+          conversation._id === response.conversation_id
+            ? { ...conversation, last_message: response.message }
+            : conversation,
+        ),
+      );
+    };
     if (socket) {
-      socket.on("message", (response: any) => {
-        const updatedChats = cloneDeep(conversations);
-        const chats = updatedChats.map((conversation) => {
-          if (conversation._id === response.conversation_id) {
-            conversation.last_message = response.message;
-            return {
-              ...conversation,
-              last_message: response.message,
-            };
-          }
-          return conversation;
-        });
-        setConversations(updatedChats);
-      });
+      socket.on("message", handleMessage);
     }
+    return () => {
+      if (socket) {
+        socket.off("message", handleMessage);
+      }
+    };
   }, [socket]);
- 
 
   return { getConversations, conversations };
 };
