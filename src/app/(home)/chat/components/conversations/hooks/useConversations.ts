@@ -1,6 +1,5 @@
 import {
-  IAllConversations,
-  ICreateConversation,
+  IConversation,
 } from "@/app/domain/models/conversations/conversations.model";
 import { conversationsCase } from "@/app/domain/use-cases/conversations/conversations.use-case";
 import { RootState } from "@/app/store";
@@ -12,13 +11,13 @@ import { Socket } from "socket.io-client";
 
 export const useConversations = (socket: Socket | null) => {
   const dispatch = useDispatch();
-  const [conversations, setConversations] = useState<IAllConversations[]>([]);
+  const [conversations, setConversations] = useState<IConversation[]>([]);
   const { _id } = useSelector((state: RootState) => state.users);
   const { getConversationByUser } = conversationsCase();
   const url = window.location.pathname;
   const id = url.substring(url.lastIndexOf("/") + 1);
 
-  const getRecipient = (conversation: any) => {
+  const getRecipient = (conversation: IConversation) => {
     if (conversation.owner._id !== _id) {
       return conversation.owner;
     } else {

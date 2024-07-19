@@ -2,16 +2,15 @@
 import React from "react";
 import { useUsers } from "../hooks/useUsers";
 import TextInput from "@/app/components/text-input/text-input.component";
-import Image from "next/image";
-
+import { Avatar } from "@/app/components/avatar/avatar.component";
 
 export const UserList = () => {
   const { users, search, setSearch, createConversation } = useUsers();
-  
+
   return (
-    <main className="h-full w-3/12 pl-2">
+    <main className="h-full w-auto pl-2">
       <section className="flex w-full flex-col gap-4 p-4">
-        <h2 className="pl-2 text-2xl text-white">People</h2>
+        <h1 className="pl-2 text-2xl text-white">People</h1>
         <TextInput
           value={search}
           id="search"
@@ -29,17 +28,7 @@ export const UserList = () => {
             className="borde flex w-full cursor-pointer items-center gap-3 rounded-xl p-1 hover:bg-grayDark"
             onClick={() => createConversation(user)}
           >
-            <Image
-              src={
-                user?.avatarUrl ||
-                "https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/1/0/e/10e6c0a439e17280a6f3fa6ae059819af5517efd.png"
-              }
-              alt={`${user.name} avatar`}
-              className={"h-14 w-14 rounded-full"}
-              width={400}
-              height={500}
-            />
-
+            <Avatar avatarUrl={user?.avatarUrl || ""} username={user.name} />
             <p className="truncate text-white">{user?.name}</p>
           </div>
         ))}

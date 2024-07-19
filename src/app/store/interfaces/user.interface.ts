@@ -1,7 +1,6 @@
-export interface IUserRedux {
-  _id: string;
-  name: string;
-  email: string;
+import { IUser } from "@/app/domain/models/users/users.model";
+
+export interface IUserRedux extends IUser {
   isLogged: boolean;
 }
 
@@ -10,4 +9,6 @@ export const defaultValueUser: IUserRedux = {
   name: "",
   email: "",
   isLogged: true,
+  createdAt: "",
+  updatedAt: "",
 };

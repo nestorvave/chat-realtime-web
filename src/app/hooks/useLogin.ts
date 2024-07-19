@@ -27,9 +27,8 @@ export const useLogin = () => {
   const onAuthCredentials = async (): Promise<void> => {
     try {
       const response = await auth(payload);
-      const { token, name, email, _id } = response;
-      dispatch(setUser({ name, email, _id, isLogged: true }));
-      setCookie("token", token);
+      dispatch(setUser({ ...response, isLogged: true }));
+      setCookie("token", response.token);
       router.push("/chat");
     } catch (error) {}
   };

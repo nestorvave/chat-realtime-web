@@ -15,6 +15,7 @@ export interface ITextInput {
   value: string;
   disabled?: boolean;
   rows?: number;
+  onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 const TextInput = (props: ITextInput) => {
   const {
@@ -32,6 +33,7 @@ const TextInput = (props: ITextInput) => {
     value,
     disabled = false,
     rows = 4,
+    onKeyPress
   } = props;
 
   const inputClass = `${className && className} p-2 px-3 block resize-none  
@@ -80,6 +82,7 @@ const TextInput = (props: ITextInput) => {
             autoFocus={autoFocus}
             style={{ outline: "none" }}
             disabled={disabled}
+            onKeyDown={onKeyPress}
           />
         )}
       </div>

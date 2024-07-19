@@ -59,7 +59,12 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
             name="msg"
             type="text"
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Search"
+            placeholder="Write a message"
+            onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === "Enter") {
+                sendMessage();
+              }
+            }}
           />
         </div>
         <div

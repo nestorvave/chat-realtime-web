@@ -1,21 +1,20 @@
 import URLS from "@/app/api/constants/url.constants";
 import { axiosInstance } from "@/app/api/tools/api";
 import {
-  IGetConversation,
   ICreateConversation,
-  IAllConversations,
+  IConversation,
 } from "../../models/conversations/conversations.model";
 
 export const conversationsCase = () => {
   const create = async (
     payload: ICreateConversation,
-  ): Promise<IGetConversation> => {
+  ): Promise<IConversation> => {
     try {
-      const response = await axiosInstance.post<IGetConversation>(
+      const response = await axiosInstance.post<IConversation>(
         URLS.CONVERSATIONS.CREATE,
         payload,
       );
-  
+
       return response.data;
     } catch (err: unknown) {
       throw new Error("ffdf");
@@ -24,7 +23,7 @@ export const conversationsCase = () => {
 
   const getConversationByUser = async (_id: string) => {
     try {
-      const response = await axiosInstance.get<IAllConversations[]>(
+      const response = await axiosInstance.get<IConversation[]>(
         `${URLS.CONVERSATIONS.CREATE}/${_id}`,
       );
       return response.data;

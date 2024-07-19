@@ -34,10 +34,12 @@ export const Conversations = () => {
     }
   }, [socket]);
 
-
-
   return (
-    <main className="h-full w-3/12 pl-2">
+    <main
+      className={
+        selectedUser.name ? "hidden h-full pl-2 md:block md:w-auto" : "w-auto"
+      }
+    >
       <section className="flex w-full flex-col gap-4 p-4">
         <h2 className="pl-2 text-2xl text-white">Messages</h2>
       </section>

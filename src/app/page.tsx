@@ -58,6 +58,11 @@ export default function Home() {
             type="password"
             onChange={(e) => onHandleChange(e)}
             placeholder=""
+            onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === "Enter") {
+                onAuthCredentials();
+              }
+            }}
           />
         </div>
         <div className="w-full">

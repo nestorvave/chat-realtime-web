@@ -25,13 +25,13 @@ export const Avatar = ({
       {avatarUrl ? (
         <>
           <Image
-            src={
-              avatarUrl 
-            }
+            src={avatarUrl}
             alt={`${username} avatar`}
-            className={"h-14 w-14 rounded-full"}
-            width={width || 400}
-            height={height || 500}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: "56px", height: "56px" }}
+            className="rounded-full" // optional
           />
         </>
       ) : (
@@ -41,7 +41,7 @@ export const Avatar = ({
       )}
       {online !== null && (
         <span
-          className={`absolute top-0 right-0 h-4 w-4 rounded-full border border-black ${online ? "bg-green-600" : "bg-red-600"}`}
+          className={`absolute right-0 top-0 h-4 w-4 rounded-full border border-black ${online ? "bg-green-600" : "bg-red-600"}`}
         ></span>
       )}
     </div>
