@@ -33,7 +33,7 @@ const TextInput = (props: ITextInput) => {
     value,
     disabled = false,
     rows = 4,
-    onKeyPress
+    onKeyPress,
   } = props;
 
   const inputClass = `${className && className} p-2 px-3 block resize-none  
@@ -44,7 +44,7 @@ const TextInput = (props: ITextInput) => {
       {(label || isRequired) && (
         <label
           htmlFor={id}
-          className="text-main mb-[8px] block text-base font-thin"
+          className="mb-[8px] pl-1 block text-base text-white"
         >
           {label}
           {isRequired && <span className="text-logo pl-1 text-xl">*</span>}

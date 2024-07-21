@@ -12,6 +12,9 @@ const URLS = {
   MESSAGES: {
     BASE: "messages",
   },
+  ROOMS: {
+    BASE: "rooms",
+  },
 };
 
 export default URLS;

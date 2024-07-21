@@ -26,6 +26,7 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
       owner: _id,
       conversation_id,
     };
+    console.log(JSON.stringify(payload));
     socket?.emit("message", JSON.stringify(payload));
     setNewMessage("");
     scrollToBottomSmooth();
