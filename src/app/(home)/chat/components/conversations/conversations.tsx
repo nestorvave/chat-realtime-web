@@ -7,13 +7,15 @@ import { setSelectedUser } from "@/app/store/modules/selected-user.module";
 import { useConversations } from "./hooks/useConversations";
 
 import { MdGroupAdd } from "react-icons/md";
-
+import { LiaHashtagSolid } from "react-icons/lia";
 import Link from "next/link";
 import { useSocketContext } from "@/app/(home)/context/socket.context";
 import { Avatar } from "@/app/components/avatar/avatar.component";
 import { Modal } from "@/app/components/modal/modal.component";
 import TextInput from "@/app/components/text-input/text-input.component";
 import { useRouter } from "next/navigation";
+import { roomsCase } from "@/app/domain/use-cases/rooms/rooms.use-case";
+import { IRoom } from "@/app/domain/models/rooms/rooms.model";
 
 export const Conversations = () => {
   const { socket } = useSocketContext();
@@ -24,6 +26,18 @@ export const Conversations = () => {
   const [online, setOnline] = useState<string[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
+  const { getRooms } = roomsCase();
+
+  const [rooms, setRooms] = useState<IRoom[]>([]);
+
+  const getMyRooms = async () => {
+    const response = await getRooms(_id);
+    setRooms(response);
+  };
+  useEffect(() => {
+    getMyRooms();
+  }, []);
+
   useEffect(() => {
     if (socket) {
       socket.on("online", (users: any) => {
@@ -55,6 +69,9 @@ export const Conversations = () => {
       name: group,
     };
     socket?.emit("join-room", JSON.stringify(payload));
+    setGroup("");
+    setOpen(false);
+    getMyRooms();
   };
 
   return (
@@ -81,7 +98,9 @@ export const Conversations = () => {
       </Modal>
       <main
         className={
-          selectedUser.name ? "hidden h-full pl-2 md:block md:w-auto" : "w-auto"
+          selectedUser.name
+            ? "hidden h-full pl-2 md:block md:w-[340px]"
+            : "w-[340px]"
         }
       >
         <section className="flex w-full flex-col justify-between gap-4 p-4">
@@ -95,33 +114,55 @@ export const Conversations = () => {
             </span>
           </div>
         </section>
-        <section className="no-scrollbar flex h-[85vh] w-full flex-col overflow-auto px-4">
-          {conversations.map((conversation, ind) => (
-            <Link
-              href={`/chat/${conversation._id}`}
-              className={`${selectedUser._id === conversation.recipient._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
-              prefetch={false}
-              onClick={() => dispatch(setSelectedUser(conversation.recipient))}
-              key={conversation._id}
-            >
-              <Avatar
-                avatarUrl={conversation.recipient.avatarUrl || ""}
-                username={conversation.recipient.name}
-                online={online.includes(conversation.recipient._id.toString())}
-              />
-              <section className="grid flex-1 gap-1">
-                <div className="flex items-center justify-between">
-                  <p>{conversation.recipient.name}</p>
-                  <p className="text-muted-foreground text-xs">2h</p>
-                </div>
-                <div
-                  className={`line-clamp-1 w-full text-sm ${conversation?.last_message?.toUpperCase() === "CREATE CONVERSATION" && "font-bold"}`}
-                >
-                  {conversation?.last_message || "Create conversation"}
-                </div>
-              </section>
-            </Link>
-          ))}
+        <section className="no-scrollbar flex h-[85vh] w-full flex-col gap-4 overflow-auto px-4">
+          <div>
+            {rooms.map((room) => (
+              <Link
+                href={`/chat/${room._id}`}
+                className={`${selectedUser._id === room.owner._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
+                prefetch={false}
+                onClick={() => dispatch(setSelectedUser(room.owner._id))}
+                key={room._id}
+              >
+                <LiaHashtagSolid className="ml-3 text-3xl text-white" />
+                <section className="ml-4 line-clamp-1 grid flex-1 gap-1">
+                  {room.name}
+                </section>
+              </Link>
+            ))}
+          </div>
+          <div>
+            {conversations.map((conversation, ind) => (
+              <Link
+                href={`/chat/${conversation._id}`}
+                className={`${selectedUser._id === conversation.recipient._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
+                prefetch={false}
+                onClick={() =>
+                  dispatch(setSelectedUser(conversation.recipient))
+                }
+                key={conversation._id}
+              >
+                <Avatar
+                  avatarUrl={conversation.recipient.avatarUrl || ""}
+                  username={conversation.recipient.name}
+                  online={online.includes(
+                    conversation.recipient._id.toString(),
+                  )}
+                />
+                <section className="grid flex-1 gap-1">
+                  <div className="flex items-center justify-between">
+                    <p>{conversation.recipient.name}</p>
+                    <p className="text-muted-foreground text-xs">2h</p>
+                  </div>
+                  <div
+                    className={`line-clamp-1 w-full text-sm ${conversation?.last_message?.toUpperCase() === "CREATE CONVERSATION" && "font-bold"}`}
+                  >
+                    {conversation?.last_message || "Create conversation"}
+                  </div>
+                </section>
+              </Link>
+            ))}
+          </div>
         </section>
       </main>
     </>
