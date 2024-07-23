@@ -20,12 +20,15 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
       { message: newMessage, owner: _id, recipient: chatSelected._id },
     ]);
     const payload = {
-      recipient: chatSelected?._id,
+      recipient: chatSelected.isRoom
+        ? chatSelected?.recipients?.map((user) => user?._id)
+        : chatSelected.recipient,
       message: newMessage,
       owner: _id,
       conversation_id: !chatSelected.isRoom ? conversation_id : "",
       room_id: chatSelected.isRoom ? conversation_id : "",
     };
+    console.log(payload);
     socket?.emit("message", JSON.stringify(payload));
     setNewMessage("");
     scrollToBottomSmooth();

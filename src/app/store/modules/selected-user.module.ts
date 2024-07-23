@@ -5,11 +5,11 @@ export const selectedChatSlice = createSlice({
   name: "selectedUser",
   initialState: defaultValueSelectedChat,
   reducers: {
-    setSelectedUser: (state, action) => ({ ...state, ...action.payload }),
-    resetSelectedUser: () => defaultValueSelectedChat,
+    setSelectedChat: (state, action) => ({ ...state, ...action.payload }),
+    resetSelectedChat: () => defaultValueSelectedChat,
   },
 });
 
-export const { setSelectedUser, resetSelectedUser } = selectedChatSlice.actions;
+export const { setSelectedChat, resetSelectedChat } = selectedChatSlice.actions;
 
 export default selectedChatSlice.reducer;

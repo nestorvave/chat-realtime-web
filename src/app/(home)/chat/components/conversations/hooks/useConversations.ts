@@ -3,14 +3,16 @@ import { IRoom } from "@/app/domain/models/rooms/rooms.model";
 import { conversationsCase } from "@/app/domain/use-cases/conversations/conversations.use-case";
 import { roomsCase } from "@/app/domain/use-cases/rooms/rooms.use-case";
 import { RootState } from "@/app/store";
-import { setSelectedUser } from "@/app/store/modules/selected-user.module";
-import { cloneDeep } from "lodash";
+import { setSelectedChat } from "@/app/store/modules/selected-user.module";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Socket } from "socket.io-client";
+import _ from "lodash";
+import { useRouter } from "next/navigation";
 
 export const useConversations = (socket: Socket | null) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [conversations, setConversations] = useState<IConversation[]>([]);
   const { _id } = useSelector((state: RootState) => state.users);
   const { getConversationByUser } = conversationsCase();
@@ -20,6 +22,7 @@ export const useConversations = (socket: Socket | null) => {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [group, setGroup] = useState<string>("");
+  const [online, setOnline] = useState<string[]>([]);
 
   const createRoom = () => {
     const payload = {
@@ -51,7 +54,7 @@ export const useConversations = (socket: Socket | null) => {
       });
       if (id !== "chat") {
         const conversation = chats.find((chat) => chat._id === id);
-        dispatch(setSelectedUser(conversation?.recipient));
+        dispatch(setSelectedChat(conversation?.recipient));
       }
       setConversations(chats);
     } catch (error) {}
@@ -63,10 +66,11 @@ export const useConversations = (socket: Socket | null) => {
       const conversation = response.find((chat) => chat._id === id);
       console.log(conversation);
       dispatch(
-        setSelectedUser({
+        setSelectedChat({
           _id: conversation?._id,
           isRoom: true,
           name: conversation?.name || "",
+          recipients: conversation?.users,
         }),
       );
     }
@@ -102,13 +106,36 @@ export const useConversations = (socket: Socket | null) => {
     };
   }, [socket]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on("online", (users: any) => {
+        const friends = users.filter((friend: any) => friend !== _id);
+        setOnline(_.uniq(friends));
+      });
+
+      return () => {
+        socket.off("online");
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("room-created", (response: string) => {
+        setOpen(false);
+        router.push(`/chat/${response}`);
+      });
+    }
+  }, [socket]);
+
   return {
     conversations,
     createRoom,
     group,
+    online,
     open,
+    rooms,
     setGroup,
     setOpen,
-    rooms,
   };
 };

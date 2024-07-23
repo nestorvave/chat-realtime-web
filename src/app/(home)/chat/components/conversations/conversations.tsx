@@ -1,9 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import _ from "lodash";
 import { RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedUser } from "@/app/store/modules/selected-user.module";
+import { setSelectedChat } from "@/app/store/modules/selected-user.module";
 import { useConversations } from "./hooks/useConversations";
 
 import { MdGroupAdd } from "react-icons/md";
@@ -13,41 +12,21 @@ import { useSocketContext } from "@/app/(home)/context/socket.context";
 import { Avatar } from "@/app/components/avatar/avatar.component";
 import { Modal } from "@/app/components/modal/modal.component";
 import TextInput from "@/app/components/text-input/text-input.component";
-import { useRouter } from "next/navigation";
-import { roomsCase } from "@/app/domain/use-cases/rooms/rooms.use-case";
-import { IRoom } from "@/app/domain/models/rooms/rooms.model";
 
 export const Conversations = () => {
   const { socket } = useSocketContext();
   const dispatch = useDispatch();
-  const { conversations, createRoom, group, open, setGroup, setOpen, rooms } =
-    useConversations(socket);
-  const { _id } = useSelector((state: RootState) => state.users);
-  const selectChat = useSelector((state: RootState) => state.selectedChat);
-  const [online, setOnline] = useState<string[]>([]);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (socket) {
-      socket.on("online", (users: any) => {
-        const friends = users.filter((friend: any) => friend !== _id);
-        setOnline(_.uniq(friends));
-      });
-
-      return () => {
-        socket.off("online");
-      };
-    }
-  }, [socket]);
-
-  useEffect(() => {
-    if (socket) {
-      socket.on("room-created", (response: string) => {
-        setOpen(false);
-        router.push(`/chat/${response}`);
-      });
-    }
-  }, [socket]);
+  const {
+    conversations,
+    createRoom,
+    group,
+    online,
+    open,
+    rooms,
+    setGroup,
+    setOpen,
+  } = useConversations(socket);
+  const selectedChat = useSelector((state: RootState) => state.selectedChat);
 
   const sortedConversations = conversations.sort((a, b) => {
     const dateA = new Date(a.updatedAt);
@@ -79,9 +58,9 @@ export const Conversations = () => {
       </Modal>
       <main
         className={
-          selectChat.name
-            ? "hidden h-full pl-2 md:block md:w-[340px]"
-            : "w-[340px]"
+          selectedChat.name
+            ? "hidden h-full pl-2 md:block md:w-[400px]"
+            : "w-[400px]"
         }
       >
         <section className="flex w-full flex-col justify-between gap-4 p-4">
@@ -100,15 +79,17 @@ export const Conversations = () => {
             {rooms.map((room) => (
               <Link
                 href={`/chat/${room._id}`}
-                className={`${selectChat._id === room.owner._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
+                className={`${selectedChat._id === room._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
                 prefetch={false}
                 onClick={() =>
                   dispatch(
-                    setSelectedUser({
+                    setSelectedChat({
                       _id: room._id,
                       name: room.name,
                       avatarUrl: "",
                       isRoom: true,
+                      recipients: room.users,
+                      recipient: null,
                     }),
                   )
                 }
@@ -125,15 +106,17 @@ export const Conversations = () => {
             {sortedConversations.map((conversation, ind) => (
               <Link
                 href={`/chat/${conversation._id}`}
-                className={`${selectChat._id === conversation.recipient._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
+                className={`${selectedChat._id === conversation.recipient._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
                 prefetch={false}
                 onClick={() =>
                   dispatch(
-                    setSelectedUser({
-                      _id: conversation.recipient._id,
+                    setSelectedChat({
+                      _id: conversation._id,
                       avatarUrl: conversation.recipient.avatarUrl || "",
                       isRoom: false,
                       name: conversation.recipient.name,
+                      recipient: conversation.recipient._id,
+                      recipients: null,
                     }),
                   )
                 }
