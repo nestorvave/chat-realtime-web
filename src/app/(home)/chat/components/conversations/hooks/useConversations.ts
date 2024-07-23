@@ -1,7 +1,7 @@
-import {
-  IConversation,
-} from "@/app/domain/models/conversations/conversations.model";
+import { IConversation } from "@/app/domain/models/conversations/conversations.model";
+import { IRoom } from "@/app/domain/models/rooms/rooms.model";
 import { conversationsCase } from "@/app/domain/use-cases/conversations/conversations.use-case";
+import { roomsCase } from "@/app/domain/use-cases/rooms/rooms.use-case";
 import { RootState } from "@/app/store";
 import { setSelectedUser } from "@/app/store/modules/selected-user.module";
 import { cloneDeep } from "lodash";
@@ -16,6 +16,22 @@ export const useConversations = (socket: Socket | null) => {
   const { getConversationByUser } = conversationsCase();
   const url = window.location.pathname;
   const id = url.substring(url.lastIndexOf("/") + 1);
+  const { getRooms } = roomsCase();
+  const [rooms, setRooms] = useState<IRoom[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [group, setGroup] = useState<string>("");
+
+  const createRoom = () => {
+    const payload = {
+      owner: _id,
+      users: ["669230973df8b020749a79f1", "669cab1ac1e3bbede9025c93"],
+      name: group,
+    };
+    socket?.emit("join-room", JSON.stringify(payload));
+    setGroup("");
+    setOpen(false);
+    getMyRooms();
+  };
 
   const getRecipient = (conversation: IConversation) => {
     if (conversation.owner._id !== _id) {
@@ -41,17 +57,37 @@ export const useConversations = (socket: Socket | null) => {
     } catch (error) {}
   };
 
+  const getMyRooms = async () => {
+    const response = await getRooms(_id);
+    if (id !== "chat") {
+      const conversation = response.find((chat) => chat._id === id);
+      console.log(conversation);
+      dispatch(
+        setSelectedUser({
+          _id: conversation?._id,
+          isRoom: true,
+          name: conversation?.name || "",
+        }),
+      );
+    }
+    setRooms(response);
+  };
+
   useEffect(() => {
     getConversations();
+    getMyRooms();
   }, []);
-
 
   useEffect(() => {
     const handleMessage = (response: any) => {
       setConversations((prevConversations) =>
         prevConversations.map((conversation) =>
           conversation._id === response.conversation_id
-            ? { ...conversation, last_message: response.message }
+            ? {
+                ...conversation,
+                last_message: response.message,
+                updatedAt: new Date().toISOString(),
+              }
             : conversation,
         ),
       );
@@ -66,5 +102,13 @@ export const useConversations = (socket: Socket | null) => {
     };
   }, [socket]);
 
-  return { getConversations, conversations };
+  return {
+    conversations,
+    createRoom,
+    group,
+    open,
+    setGroup,
+    setOpen,
+    rooms,
+  };
 };

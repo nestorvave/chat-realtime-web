@@ -1,10 +1,12 @@
 import { IUser } from "@/app/domain/models/users/users.model";
 
-export const defaultValueSelectedUser: IUser = {
+export const defaultValueSelectedChat: {
+  _id: string;
+  name: string;
+  avatarUrl?: string;
+  isRoom: boolean;
+} = {
   _id: "",
   name: "",
-  email: "",
-  createdAt: "",
-  updatedAt: "",
-  avatarUrl: "",
+  isRoom: false,
 };

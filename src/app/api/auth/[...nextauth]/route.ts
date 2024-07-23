@@ -11,7 +11,6 @@ export const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-      console.log("SEESSSIOOON")
       const { user } = session;
       if (user) {
         try {

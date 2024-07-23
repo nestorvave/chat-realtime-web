@@ -15,7 +15,7 @@ interface IChatBox {
 export const ChatBox = ({ conversation_id }: IChatBox) => {
   const { _id } = useSelector((state: RootState) => state.users);
   const { socket } = useSocketContext();
-  const userSelected = useSelector((state: RootState) => state.selectedUser);
+  const chatSelected = useSelector((state: RootState) => state.selectedChat);
 
   const { messages, sendMessage, newMessage, setNewMessage, chatRef } =
     useChatbox(socket, conversation_id);
@@ -24,10 +24,11 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
     <main className="max-h-[99vh flex h-[99vh] w-full flex-col justify-between pb-1 text-white">
       <section className="flex items-center gap-4 border-b border-gray-600 py-4">
         <Avatar
-          avatarUrl={userSelected.avatarUrl || ""}
-          username={userSelected.name}
+          avatarUrl={chatSelected.avatarUrl || ""}
+          username={chatSelected.name}
         />
-        <h2>{userSelected?.name}</h2>
+
+        <h2 className="ml-4">{chatSelected?.name}</h2>
       </section>
       <section
         ref={chatRef}

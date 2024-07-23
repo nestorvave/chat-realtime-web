@@ -11,7 +11,7 @@ declare global {
 }
 export const mainReducer = combineReducers({
   users: userReducer,
-  selectedUser: selectedUserReducer,
+  selectedChat: selectedUserReducer,
 });
 
 const persistedReducer = persistReducer(

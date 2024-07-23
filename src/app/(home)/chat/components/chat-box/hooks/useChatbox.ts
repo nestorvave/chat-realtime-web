@@ -7,26 +7,25 @@ import { Socket } from "socket.io-client";
 
 export const useChatbox = (socket: Socket | null, conversation_id: string) => {
   const { _id } = useSelector((state: RootState) => state.users);
-  const userSelected = useSelector((state: RootState) => state.selectedUser);
+  const chatSelected = useSelector((state: RootState) => state.selectedChat);
   const chatRef = useRef<HTMLDivElement>(null);
   const [newMessage, setNewMessage] = useState<string>("");
   const [messages, setMessages] = useState<IMessage[]>([]);
 
-   const { getByConversation } = messagesCase();
+  const { getByConversation } = messagesCase();
 
   const sendMessage = () => {
     setMessages((prev: any) => [
       ...prev,
-      { message: newMessage, owner: _id, recipient: userSelected._id },
+      { message: newMessage, owner: _id, recipient: chatSelected._id },
     ]);
-
     const payload = {
-      recipient: userSelected?._id,
+      recipient: chatSelected?._id,
       message: newMessage,
       owner: _id,
-      conversation_id,
+      conversation_id: !chatSelected.isRoom ? conversation_id : "",
+      room_id: chatSelected.isRoom ? conversation_id : "",
     };
-    console.log(JSON.stringify(payload));
     socket?.emit("message", JSON.stringify(payload));
     setNewMessage("");
     scrollToBottomSmooth();
@@ -50,10 +49,10 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
   };
 
   useEffect(() => {
-    if (userSelected?._id) {
+    if (chatSelected?._id) {
       getMessages();
     }
-  }, [userSelected]);
+  }, [conversation_id, chatSelected]);
 
   useEffect(() => {
     if (socket) {

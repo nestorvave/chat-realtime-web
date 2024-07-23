@@ -20,23 +20,12 @@ import { IRoom } from "@/app/domain/models/rooms/rooms.model";
 export const Conversations = () => {
   const { socket } = useSocketContext();
   const dispatch = useDispatch();
-  const { conversations } = useConversations(socket);
+  const { conversations, createRoom, group, open, setGroup, setOpen, rooms } =
+    useConversations(socket);
   const { _id } = useSelector((state: RootState) => state.users);
-  const selectedUser = useSelector((state: RootState) => state.selectedUser);
+  const selectChat = useSelector((state: RootState) => state.selectedChat);
   const [online, setOnline] = useState<string[]>([]);
-  const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
-  const { getRooms } = roomsCase();
-
-  const [rooms, setRooms] = useState<IRoom[]>([]);
-
-  const getMyRooms = async () => {
-    const response = await getRooms(_id);
-    setRooms(response);
-  };
-  useEffect(() => {
-    getMyRooms();
-  }, []);
 
   useEffect(() => {
     if (socket) {
@@ -60,19 +49,11 @@ export const Conversations = () => {
     }
   }, [socket]);
 
-  const [group, setGroup] = useState<string>("");
-
-  const createRoom = () => {
-    const payload = {
-      owner: _id,
-      users: ["669230973df8b020749a79f1", "669cab1ac1e3bbede9025c93"],
-      name: group,
-    };
-    socket?.emit("join-room", JSON.stringify(payload));
-    setGroup("");
-    setOpen(false);
-    getMyRooms();
-  };
+  const sortedConversations = conversations.sort((a, b) => {
+    const dateA = new Date(a.updatedAt);
+    const dateB = new Date(b.updatedAt);
+    return Number(dateB) - Number(dateA);
+  });
 
   return (
     <>
@@ -98,7 +79,7 @@ export const Conversations = () => {
       </Modal>
       <main
         className={
-          selectedUser.name
+          selectChat.name
             ? "hidden h-full pl-2 md:block md:w-[340px]"
             : "w-[340px]"
         }
@@ -119,9 +100,18 @@ export const Conversations = () => {
             {rooms.map((room) => (
               <Link
                 href={`/chat/${room._id}`}
-                className={`${selectedUser._id === room.owner._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
+                className={`${selectChat._id === room.owner._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
                 prefetch={false}
-                onClick={() => dispatch(setSelectedUser(room.owner._id))}
+                onClick={() =>
+                  dispatch(
+                    setSelectedUser({
+                      _id: room._id,
+                      name: room.name,
+                      avatarUrl: "",
+                      isRoom: true,
+                    }),
+                  )
+                }
                 key={room._id}
               >
                 <LiaHashtagSolid className="ml-3 text-3xl text-white" />
@@ -132,13 +122,20 @@ export const Conversations = () => {
             ))}
           </div>
           <div>
-            {conversations.map((conversation, ind) => (
+            {sortedConversations.map((conversation, ind) => (
               <Link
                 href={`/chat/${conversation._id}`}
-                className={`${selectedUser._id === conversation.recipient._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
+                className={`${selectChat._id === conversation.recipient._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
                 prefetch={false}
                 onClick={() =>
-                  dispatch(setSelectedUser(conversation.recipient))
+                  dispatch(
+                    setSelectedUser({
+                      _id: conversation.recipient._id,
+                      avatarUrl: conversation.recipient.avatarUrl || "",
+                      isRoom: false,
+                      name: conversation.recipient.name,
+                    }),
+                  )
                 }
                 key={conversation._id}
               >

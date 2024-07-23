@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { defaultValueSelectedUser } from "../interfaces/selected-user.interface";
+import { defaultValueSelectedChat } from "../interfaces/selected-user.interface";
 
-export const userSlice = createSlice({
-  name: "user",
-  initialState: defaultValueSelectedUser,
+export const selectedChatSlice = createSlice({
+  name: "selectedUser",
+  initialState: defaultValueSelectedChat,
   reducers: {
     setSelectedUser: (state, action) => ({ ...state, ...action.payload }),
-    resetSelectedUser: () => defaultValueSelectedUser,
+    resetSelectedUser: () => defaultValueSelectedChat,
   },
 });
 
-export const { setSelectedUser, resetSelectedUser } = userSlice.actions;
+export const { setSelectedUser, resetSelectedUser } = selectedChatSlice.actions;
 
-export default userSlice.reducer;
+export default selectedChatSlice.reducer;
