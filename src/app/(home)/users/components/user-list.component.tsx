@@ -8,7 +8,7 @@ export const UserList = () => {
   const { users, search, setSearch, createConversation } = useUsers();
 
   return (
-    <main className="h-full w-auto pl-2">
+    <main className="h-full w-[400px] pl-2">
       <section className="flex w-full flex-col gap-4 p-4">
         <h1 className="pl-2 text-2xl text-white">People</h1>
         <TextInput
