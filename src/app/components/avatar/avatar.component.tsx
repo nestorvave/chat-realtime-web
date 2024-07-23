@@ -6,6 +6,7 @@ interface IAvatar {
   username: string;
   width?: number;
   height?: number;
+  size?: string;
   online?: boolean | null;
 }
 
@@ -15,11 +16,18 @@ export const Avatar = ({
   height,
   width,
   online = null,
+  size = "",
 }: IAvatar) => {
   const getInitials = (name: string): string => {
-    const names = name.split(" ");
-    return names.map((name) => name.charAt(0).toUpperCase()).join("");
+    const names = name?.split(" ");
+    return names?.map((name) => name.charAt(0).toUpperCase()).join("");
   };
+
+  const sizes = `h-${size || "14"} w-${size || "14"}`;
+
+
+  console.log(username)
+
   return (
     <div className="relative inline-block">
       {avatarUrl ? (
@@ -35,7 +43,9 @@ export const Avatar = ({
           />
         </>
       ) : (
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-300 text-gray-600">
+        <div
+          className={`flex ${sizes} items-center justify-center rounded-full bg-gray-300 text-gray-600`}
+        >
           <span className="text-xl">{getInitials(username)}</span>
         </div>
       )}

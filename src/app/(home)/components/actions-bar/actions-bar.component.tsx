@@ -8,8 +8,9 @@ import { resetUser } from "@/app/store/modules/user.module";
 import { deleteCookie } from "cookies-next";
 import { RootState } from "@/app/store";
 import { Avatar } from "@/app/components/avatar/avatar.component";
-import { resetSelectedUser } from "@/app/store/modules/selected-user.module";
+
 import { IoExitOutline } from "react-icons/io5";
+import { resetSelectedChat } from "@/app/store/modules/selected-user.module";
 export const ActionsBar = () => {
   const user = useSelector((state: RootState) => state.users);
   const currentPath = usePathname();
@@ -17,7 +18,7 @@ export const ActionsBar = () => {
   const routes = useRouter();
   const logOut = () => {
     dispatch(resetUser());
-    dispatch(resetSelectedUser());
+    dispatch(resetSelectedChat());
     deleteCookie("token");
     routes.push("/");
   };

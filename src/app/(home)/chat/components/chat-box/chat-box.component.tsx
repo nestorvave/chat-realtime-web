@@ -20,8 +20,35 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
   const { messages, sendMessage, newMessage, setNewMessage, chatRef } =
     useChatbox(socket, conversation_id);
 
+  console.log(chatSelected);
+  console.log(messages);
+
+  const getUserInfo = (userAgent: string) => {
+    const user = chatSelected?.recipients?.find(
+      (user) => user._id === userAgent,
+    );
+    return (
+      <div className="flex  items-center gap-3">
+        <Avatar
+          size="8"
+          avatarUrl={user?.avatarUrl || ""}
+          username={user?.name!}
+        />
+        <p>{user?.name}</p>
+      </div>
+    );
+  };
+
+  const messageJsx = (owner: string, message: string) => (
+    <span
+      className={`max-w-[200px] overflow-ellipsis text-balance break-words rounded-3xl p-4 md:max-w-[400px] ${owner === _id ? "bg-whiteDark text-mainDark" : "bg-grayDark text-whiteDark"}`}
+    >
+      {message}
+    </span>
+  );
+
   return (
-    <main className="max-h-[99vh flex h-[99vh] w-full flex-col justify-between pb-1 text-white">
+    <main className="max-h-[99vh flex h-[99vh] w-full flex-col justify-between overflow-hidden pb-1 text-white">
       <section className="flex items-center gap-4 border-b border-gray-600 py-4">
         <Avatar
           avatarUrl={chatSelected.avatarUrl || ""}
@@ -37,16 +64,14 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
         <div className="flex w-full flex-col">
           {messages.map(
             ({ _id: id, message, owner }: IMessage, idx: number) => (
-              <span
+              <div
                 key={id || idx}
-                className={`flex ${owner === _id ? "justify-end" : "justify-start"} mb-2`}
+                className={`flex gap-1 ${owner === _id ? " justify-end" : " grid justify-start gap-2"} mb-2`}
               >
-                <span
-                  className={`max-w-[50%] rounded-3xl p-4 ${owner === _id ? "bg-whiteDark text-mainDark" : "bg-grayDark text-whiteDark"}`}
-                >
-                  {message}
-                </span>
-              </span>
+                {owner !== _id && chatSelected.isRoom && getUserInfo(owner)}
+
+                {messageJsx(owner, message)}
+              </div>
             ),
           )}
         </div>

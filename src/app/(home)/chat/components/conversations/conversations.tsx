@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedChat } from "@/app/store/modules/selected-user.module";
@@ -79,7 +79,7 @@ export const Conversations = () => {
             {rooms.map((room) => (
               <Link
                 href={`/chat/${room._id}`}
-                className={`${selectedChat._id === room._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
+                className={`${selectedChat._id === room._id && "bg-grayDark"} hover:bg-muted/50 flex cursor-pointer items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}
                 prefetch={false}
                 onClick={() =>
                   dispatch(
