@@ -4,7 +4,8 @@ import { IUser } from "@/app/domain/models/users/users.model";
 import { conversationsCase } from "@/app/domain/use-cases/conversations/conversations.use-case";
 import { usersCase } from "@/app/domain/use-cases/users/users.use-case";
 import { RootState } from "@/app/store";
-import { setSelectedUser } from "@/app/store/modules/selected-user.module";
+import { setSelectedChat } from "@/app/store/modules/selected-user.module";
+
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
@@ -38,7 +39,7 @@ export const useUsers = () => {
   const createConversation = async (user: IUser) => {
     try {
       const conversation = await create({ owner, recipient: user._id });
-      dispatch(setSelectedUser(getRecipient(conversation)));
+      dispatch(setSelectedChat(getRecipient(conversation)));
       router.push(`/chat/${conversation._id}`);
     } catch (error) {}
   };

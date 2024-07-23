@@ -7,7 +7,6 @@ import { FaGoogle } from "react-icons/fa";
 import { useLogin } from "./hooks/useLogin";
 import Link from "next/link";
 
-
 export default function Home() {
   const { onAuthCredentials, onAuthGoogle, onHandleChange, payload } =
     useLogin();
@@ -74,7 +73,7 @@ export default function Home() {
           />
         </div>
         <div className="text-muted-foreground text-center text-sm">
-          Don't have an account?{" "}
+          Don't have an account?
           <Link href="/register" className="underline underline-offset-4">
             Register
           </Link>
