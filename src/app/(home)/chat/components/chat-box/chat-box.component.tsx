@@ -16,13 +16,10 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
   const { _id } = useSelector((state: RootState) => state.users);
   const { socket } = useSocketContext();
   const chatSelected = useSelector((state: RootState) => state.selectedChat);
-
   const { messages, sendMessage, newMessage, setNewMessage, chatRef } =
     useChatbox(socket, conversation_id);
 
-  console.log(chatSelected);
-  console.log(messages);
-
+  
   const getUserInfo = (userAgent: string) => {
     const user = chatSelected?.recipients?.find(
       (user) => user._id === userAgent,
@@ -30,7 +27,7 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
     return (
       <div className="flex  items-center gap-3">
         <Avatar
-          size="8"
+          size="h-8 w-8"
           avatarUrl={user?.avatarUrl || ""}
           username={user?.name!}
         />

@@ -1,4 +1,3 @@
-
 import { IConversation } from "@/app/domain/models/conversations/conversations.model";
 import { IUser } from "@/app/domain/models/users/users.model";
 import { conversationsCase } from "@/app/domain/use-cases/conversations/conversations.use-case";
@@ -39,7 +38,10 @@ export const useUsers = () => {
   const createConversation = async (user: IUser) => {
     try {
       const conversation = await create({ owner, recipient: user._id });
-      dispatch(setSelectedChat(getRecipient(conversation)));
+      const recipient = getRecipient(conversation);
+      dispatch(
+        setSelectedChat({ ...recipient, avatarUrl: recipient.avatarUrl || "" }),
+      );
       router.push(`/chat/${conversation._id}`);
     } catch (error) {}
   };

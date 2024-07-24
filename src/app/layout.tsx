@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         suppressHydrationWarning={true}
-        className={`${inter.className} bg-mainDark max-w-[100vh]`}
+        className={`${inter.className} bg-mainDark`}
       >
         <ReduxProvider>
           <GoogleProvider>{children}</GoogleProvider>

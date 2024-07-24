@@ -23,7 +23,6 @@ export const Avatar = ({
     return names?.map((name) => name.charAt(0).toUpperCase()).join("");
   };
 
-  const sizes = `h-${size || "14"} w-${size || "14"}`;
   const getUsernameColor = (name: string): string => {
     const colors = [
       "bg-[#FF5733]",
@@ -46,8 +45,8 @@ export const Avatar = ({
     return colors[index];
   };
   const usernameColor = getUsernameColor(username);
-  console.log(usernameColor);
-  return (  
+
+  return (
     <div className="relative inline-block">
       {avatarUrl ? (
         <>
@@ -63,7 +62,7 @@ export const Avatar = ({
         </>
       ) : (
         <div
-          className={`flex ${sizes} items-center justify-center rounded-full ${usernameColor}`}
+          className={`flex ${size ? size : "h-14 w-14"} items-center justify-center rounded-full ${usernameColor}`}
         >
           <span className="text-xl">{getInitials(username)}</span>
         </div>

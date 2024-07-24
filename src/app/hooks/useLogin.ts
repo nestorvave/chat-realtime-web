@@ -2,7 +2,7 @@
 
 import { auth } from "@/app/domain/use-cases/login/login.use-case";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/modules/user.module";

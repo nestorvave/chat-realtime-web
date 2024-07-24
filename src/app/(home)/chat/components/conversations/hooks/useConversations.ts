@@ -15,6 +15,7 @@ export const useConversations = (socket: Socket | null) => {
   const router = useRouter();
   const [conversations, setConversations] = useState<IConversation[]>([]);
   const { _id } = useSelector((state: RootState) => state.users);
+  const chatSelected = useSelector((state: RootState) => state.selectedChat);
   const { getConversationByUser } = conversationsCase();
   const url = window.location.pathname;
   const id = url.substring(url.lastIndexOf("/") + 1);
@@ -52,9 +53,11 @@ export const useConversations = (socket: Socket | null) => {
         conversation.recipient = recipient;
         return conversation;
       });
-      if (id !== "chat") {
+      if (id !== "chat" && !chatSelected._id) {
         const conversation = chats.find((chat) => chat._id === id);
-        dispatch(setSelectedChat(conversation?.recipient));
+        if (conversation?._id) {
+          dispatch(setSelectedChat(conversation?.recipient));
+        }
       }
       setConversations(chats);
     } catch (error) {}
@@ -62,25 +65,28 @@ export const useConversations = (socket: Socket | null) => {
 
   const getMyRooms = async () => {
     const response = await getRooms(_id);
-    if (id !== "chat") {
+    if (id !== "chat" && !chatSelected._id) {
       const conversation = response.find((chat) => chat._id === id);
-      console.log(conversation);
-      dispatch(
-        setSelectedChat({
-          _id: conversation?._id,
-          isRoom: true,
-          name: conversation?.name || "",
-          recipients: conversation?.users,
-        }),
-      );
+      if (conversation?._id) {
+        dispatch(
+          setSelectedChat({
+            _id: conversation?._id,
+            isRoom: true,
+            name: conversation?.name || "",
+            recipients: conversation?.users,
+          }),
+        );
+      }
     }
     setRooms(response);
   };
 
   useEffect(() => {
-    getConversations();
-    getMyRooms();
-  }, []);
+    if (_id) {
+      getConversations();
+      getMyRooms();
+    }
+  }, [_id]);
 
   useEffect(() => {
     const handleMessage = (response: any) => {

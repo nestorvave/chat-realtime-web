@@ -28,7 +28,7 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
       conversation_id: !chatSelected.isRoom ? conversation_id : "",
       room_id: chatSelected.isRoom ? conversation_id : "",
     };
-    console.log(payload);
+
     socket?.emit("message", JSON.stringify(payload));
     setNewMessage("");
     scrollToBottomSmooth();

@@ -11,6 +11,7 @@ import { Avatar } from "@/app/components/avatar/avatar.component";
 
 import { IoExitOutline } from "react-icons/io5";
 import { resetSelectedChat } from "@/app/store/modules/selected-user.module";
+import { signOut } from "next-auth/react";
 export const ActionsBar = () => {
   const user = useSelector((state: RootState) => state.users);
   const currentPath = usePathname();
@@ -20,6 +21,7 @@ export const ActionsBar = () => {
     dispatch(resetUser());
     dispatch(resetSelectedChat());
     deleteCookie("token");
+    signOut();
     routes.push("/");
   };
 

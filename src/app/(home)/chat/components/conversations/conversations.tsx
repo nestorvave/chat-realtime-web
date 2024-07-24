@@ -34,6 +34,7 @@ export const Conversations = () => {
     return Number(dateB) - Number(dateA);
   });
 
+
   return (
     <>
       <Modal
@@ -103,7 +104,7 @@ export const Conversations = () => {
             ))}
           </div>
           <div>
-            {sortedConversations.map((conversation, ind) => (
+            {sortedConversations.map((conversation) => (
               <Link
                 href={`/chat/${conversation._id}`}
                 className={`${selectedChat._id === conversation.recipient._id && "bg-grayDark"} hover:bg-muted/50 flex items-center gap-4 rounded-lg p-2 text-white hover:bg-grayDark`}

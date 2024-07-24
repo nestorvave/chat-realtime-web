@@ -2,6 +2,7 @@ import { loginAction } from "@/actions/login/login.action";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 
+
 const handler = NextAuth({
   providers: [
     GoogleProvider({
@@ -11,15 +12,18 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
+      console.log(session);
       const { user } = session;
       if (user) {
         try {
-          const response = await loginAction({
+          const userN = await loginAction({
             email: user.email,
             avatarUrl: user.image,
             name: user.name,
             password: "zizu",
+            isGoogle: true,
           });
+          return userN;
         } catch (error) {
           console.error("Error en la acción de login:", error);
         }

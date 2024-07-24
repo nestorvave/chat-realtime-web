@@ -4,7 +4,7 @@ const URLS = {
     REGISTER: "auth/register",
   },
   USERS: {
-    CREATE: "users",
+    BASE: "users",
   },
   CONVERSATIONS: {
     CREATE: "conversations",
