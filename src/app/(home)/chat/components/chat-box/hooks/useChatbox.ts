@@ -1,5 +1,6 @@
 import { IMessage } from "@/app/domain/models/messages/messages.model";
 import { messagesCase } from "@/app/domain/use-cases/messages/messages.use-case";
+import { createSuggestions } from "@/app/hooks/createSuggestions";
 import { RootState } from "@/app/store";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -11,6 +12,7 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
   const chatRef = useRef<HTMLDivElement>(null);
   const [newMessage, setNewMessage] = useState<string>("");
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const { getByConversation } = messagesCase();
 
@@ -59,8 +61,11 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("message", (response: any) => {
+      socket.on("message", async (response: any) => {
         if (response.owner !== _id) {
+          const iaResponse = await createSuggestions(response.message);
+          console.log(messages)
+          setSuggestions(iaResponse.split("/"));
           setMessages((prev: any) => [
             ...prev,
             {
@@ -78,5 +83,13 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
     scrollToBottomSmooth();
   }, [messages]);
 
-  return { messages, sendMessage, newMessage, setNewMessage, chatRef };
+  return {
+    chatRef,
+    messages,
+    newMessage,
+    sendMessage,
+    setNewMessage,
+    suggestions,
+    setSuggestions,
+  };
 };

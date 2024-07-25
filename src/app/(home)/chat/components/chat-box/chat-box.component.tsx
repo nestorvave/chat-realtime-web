@@ -7,6 +7,7 @@ import React from "react";
 import { IoSend } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { useChatbox } from "./hooks/useChatbox";
+import { GiFairyWand } from "react-icons/gi";
 
 interface IChatBox {
   conversation_id: string;
@@ -16,16 +17,22 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
   const { _id } = useSelector((state: RootState) => state.users);
   const { socket } = useSocketContext();
   const chatSelected = useSelector((state: RootState) => state.selectedChat);
-  const { messages, sendMessage, newMessage, setNewMessage, chatRef } =
-    useChatbox(socket, conversation_id);
+  const {
+    messages,
+    suggestions,
+    sendMessage,
+    newMessage,
+    setNewMessage,
+    chatRef,
+    setSuggestions,
+  } = useChatbox(socket, conversation_id);
 
-  
   const getUserInfo = (userAgent: string) => {
     const user = chatSelected?.recipients?.find(
       (user) => user._id === userAgent,
     );
     return (
-      <div className="flex  items-center gap-3">
+      <div className="flex items-center gap-3">
         <Avatar
           size="h-8 w-8"
           avatarUrl={user?.avatarUrl || ""}
@@ -63,7 +70,7 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
             ({ _id: id, message, owner }: IMessage, idx: number) => (
               <div
                 key={id || idx}
-                className={`flex gap-1 ${owner === _id ? " justify-end" : " grid justify-start gap-2"} mb-2`}
+                className={`flex gap-1 ${owner === _id ? "justify-end" : "grid justify-start gap-2"} mb-2`}
               >
                 {owner !== _id && chatSelected.isRoom && getUserInfo(owner)}
 
@@ -74,28 +81,50 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
         </div>
       </section>
 
-      <section className="end-1 mt-auto flex w-full items-center justify-center gap-6 px-5">
-        <div className="w-full">
-          <TextInput
-            value={newMessage}
-            id="msg"
-            name="msg"
-            type="text"
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Write a message"
-            onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
-              if (e.key === "Enter") {
-                sendMessage();
-              }
-            }}
-          />
-        </div>
-        <div
-          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg bg-whiteDark"
-          onClick={sendMessage}
-        >
-          <IoSend className="text-xl text-mainDark" />
-        </div>
+      <section className="end-1 mt-auto flex w-full flex-col items-center justify-center px-5">
+        {suggestions.length !== 0 && (
+          <section className="mb-4 flex w-full flex-col gap-2 transition-all ease-out ">
+            <h2 className="w-full text-left">Suggestions for you</h2>
+            <div className="flex gap-2">
+              {suggestions.map((suggestion) => (
+                <div
+                  key={suggestion}
+                  onClick={() => {
+                    setSuggestions([]);
+                    setNewMessage(suggestion);
+                  }}
+                  className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-grayDark p-2 px-4 text-sm"
+                >
+                  <GiFairyWand className="text-white" />
+                  {suggestion}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+        <section className="flex w-full">
+          <div className="w-full gap-6">
+            <TextInput
+              value={newMessage}
+              id="msg"
+              name="msg"
+              type="text"
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Write a message"
+              onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.key === "Enter") {
+                  sendMessage();
+                }
+              }}
+            />
+          </div>
+          <div
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg bg-whiteDark"
+            onClick={sendMessage}
+          >
+            <IoSend className="text-xl text-mainDark" />
+          </div>
+        </section>
       </section>
     </main>
   );

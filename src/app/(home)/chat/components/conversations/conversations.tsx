@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedChat } from "@/app/store/modules/selected-user.module";
@@ -33,7 +33,6 @@ export const Conversations = () => {
     const dateB = new Date(b.updatedAt);
     return Number(dateB) - Number(dateA);
   });
-
 
   return (
     <>
