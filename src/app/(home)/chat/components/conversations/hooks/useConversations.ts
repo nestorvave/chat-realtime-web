@@ -85,6 +85,7 @@ export const useConversations = (socket: Socket | null) => {
     if (_id) {
       getConversations();
       getMyRooms();
+      socket?.emit("getOnlineUsers");
     }
   }, [_id]);
 
@@ -115,6 +116,7 @@ export const useConversations = (socket: Socket | null) => {
   useEffect(() => {
     if (socket) {
       socket.on("online", (users: any) => {
+        console.log("onlineeee")
         const friends = users.filter((friend: any) => friend !== _id);
         setOnline(_.uniq(friends));
       });
@@ -123,7 +125,7 @@ export const useConversations = (socket: Socket | null) => {
         socket.off("online");
       };
     }
-  }, [socket]);
+  }, [socket, conversations]);
 
   useEffect(() => {
     if (socket) {

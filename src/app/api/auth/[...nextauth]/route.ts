@@ -1,7 +1,8 @@
 import { loginAction } from "@/actions/login/login.action";
+import { setCookie } from "cookies-next";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
-
+import { cookies } from "next/headers";
 
 const handler = NextAuth({
   providers: [
@@ -12,7 +13,6 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-      console.log(session);
       const { user } = session;
       if (user) {
         try {
@@ -23,6 +23,8 @@ const handler = NextAuth({
             password: "zizu",
             isGoogle: true,
           });
+          const cookieStore = cookies();
+          cookieStore.set("token", userN?.token);
           return userN;
         } catch (error) {
           console.error("Error en la acción de login:", error);

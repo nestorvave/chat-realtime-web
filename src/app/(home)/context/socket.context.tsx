@@ -15,8 +15,8 @@ const AppContext = createContext<SocketContextType>({ socket: null });
 export function AppWrapper({ children }: { children: React.ReactNode }) {
   const [socket, setSocket] = useState<any>();
   const { data: session, status } = useSession();
-   const userState = useSelector((state: RootState) => state.users);
- 
+  const userState = useSelector((state: RootState) => state.users);
+
   const dispatch = useDispatch();
 
   const newSession: any = session;
@@ -50,7 +50,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
     return () => {
       connection.disconnect();
     };
-  }, []);
+  }, [userState]);
 
   return (
     <AppContext.Provider value={{ socket }}>{children}</AppContext.Provider>
