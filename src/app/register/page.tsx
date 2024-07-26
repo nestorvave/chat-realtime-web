@@ -71,6 +71,11 @@ export default function Register() {
             type="password"
             onChange={(e) => onHandleChange(e)}
             placeholder=""
+            onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === "Enter") {
+                onAuthCredentials();
+              }
+            }}
           />
         </div>
         <div className="w-full">
@@ -83,10 +88,7 @@ export default function Register() {
         </div>
         <div className="text-muted-foreground text-center text-sm">
           Already have an account?
-          <Link
-            href="/"
-            className="underline underline-offset-4"
-          >
+          <Link href="/" className="underline underline-offset-4">
             Login
           </Link>
         </div>
