@@ -33,6 +33,7 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
 
     socket?.emit("message", JSON.stringify(payload));
     setNewMessage("");
+    setSuggestions([]);
     scrollToBottomSmooth();
   };
 
@@ -62,9 +63,12 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
   useEffect(() => {
     if (socket) {
       socket.on("message", async (response: any) => {
-        if (response.owner !== _id) {
+        console.log(chatSelected);
+        if (
+          response.owner !== _id &&
+          conversation_id === response.conversation_id
+        ) {
           const iaResponse = await createSuggestions(response.message);
-
           setSuggestions(iaResponse.split("/"));
           setMessages((prev: any) => [
             ...prev,
