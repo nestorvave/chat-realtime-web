@@ -5,12 +5,15 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
 });
 
-export async function createSuggestions(message: string) {
+export async function createSuggestions(lastMessages: string, message: string) {
+  console.log("loading....");
   const prompt = `Mi aplicacion es un chat tipo whatsapp, messenger, lo que quiero es que me des sugerencias de respuestas
-   a los mensajes que me vayan enviando,las sugerencias deben ser muy cortas, al mensaje que le daras sugerencias de respuesta sera el siguiente  "${message}"
-    ...El modo en el que me daras las respuestas sera en un texto seguido separados con un slash cada pregunta solo quiero 4 sugerencias en total
-     sin caracteres especiales mas que los signos de interrogacion
-  
+   a los mensajes que me vayan enviando,las sugerencias deben ser muy cortas, a los mensajes que 
+   le daras sugerencias de respuesta sera a este ultimo mensaje ${message} y el contexto de la conversacion es esto que son
+   los ultimos mensajes del chat  ${lastMessages}
+    ...El modo en el que me daras las respuestas sera en un texto seguido separados con un slash (/) cada sugerencia no tienen que ser afuerzas preguntas las sugerencias
+    pueden ser de todo tipo hasta una respuesta monosilabica, un texto, o una pregunta etc... solo quiero 4 sugerencias en total, sin caracteres especiales los unicos permitidos son
+    signos de intrrogacion o exclamacion
   `;
 
   /*  `Mi aplicacion es una app, lo que quiero es que el usuario con el que estoy conversando tiene gustos como futbol, politica de mexico, lo que quiero es que me des 

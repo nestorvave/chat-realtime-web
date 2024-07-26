@@ -5,6 +5,7 @@ import { RootState } from "@/app/store";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Socket } from "socket.io-client";
+import getLastMessages from "../utils/get-last-msg.utils";
 
 export const useChatbox = (socket: Socket | null, conversation_id: string) => {
   const { _id } = useSelector((state: RootState) => state.users);
@@ -36,7 +37,6 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
     setSuggestions([]);
     scrollToBottomSmooth();
   };
-
   const scrollToBottomSmooth = () => {
     if (chatRef.current) {
       chatRef.current.scrollTo({
@@ -63,13 +63,18 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
   useEffect(() => {
     if (socket) {
       socket.on("message", async (response: any) => {
-        console.log(chatSelected);
         if (
           response.owner !== _id &&
           conversation_id === response.conversation_id
         ) {
-          const iaResponse = await createSuggestions(response.message);
-          setSuggestions(iaResponse.split("/"));
+          if (messages.length > 9) {
+            const lastMessages = await getLastMessages([...messages]);
+            const iaResponse = await createSuggestions(
+              lastMessages,
+              response.message,
+            );
+            setSuggestions(iaResponse.split("/"));
+          }
           setMessages((prev: any) => [
             ...prev,
             {
