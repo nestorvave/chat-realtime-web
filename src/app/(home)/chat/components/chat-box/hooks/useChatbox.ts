@@ -67,14 +67,16 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
           response.owner !== _id &&
           conversation_id === response.conversation_id
         ) {
-          if (messages.length > 9) {
-            const lastMessages = await getLastMessages([...messages]);
-            const iaResponse = await createSuggestions(
-              lastMessages,
-              response.message,
-            );
-            setSuggestions(iaResponse.split("/"));
-          }
+          console.log(messages);
+
+          console.log(response);
+          const lastMessages = await getLastMessages([...messages]);
+          const iaResponse = await createSuggestions(
+            lastMessages,
+            response.message,
+          );
+          setSuggestions(iaResponse.split("/"));
+
           setMessages((prev: any) => [
             ...prev,
             {
