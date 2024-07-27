@@ -1,11 +1,12 @@
 import { IMessage } from "@/app/domain/models/messages/messages.model";
 import { messagesCase } from "@/app/domain/use-cases/messages/messages.use-case";
-import { createSuggestions } from "@/app/hooks/createSuggestions";
+
 import { RootState } from "@/app/store";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Socket } from "socket.io-client";
 import getLastMessages from "../utils/get-last-msg.utils";
+import { IACase } from "@/app/domain/use-cases/ia/ia.use-case";
 
 export const useChatbox = (socket: Socket | null, conversation_id: string) => {
   const { _id } = useSelector((state: RootState) => state.users);
@@ -16,6 +17,7 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const { getByConversation } = messagesCase();
+  const { suggestionMsgResponse } = IACase();
 
   const sendMessage = () => {
     setMessages((prev: any) => [
@@ -71,7 +73,7 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
 
           console.log(response);
           const lastMessages = await getLastMessages([...messages]);
-          const iaResponse = await createSuggestions(
+          const iaResponse = await suggestionMsgResponse(
             lastMessages,
             response.message,
           );

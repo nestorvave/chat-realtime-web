@@ -3,7 +3,6 @@ import { LayoutLoginRegister } from "./components/layout-login/layout-login.comp
 import TextInput from "./components/text-input/text-input.component";
 import Button from "./components/button/custom-button.component";
 import { FaGoogle } from "react-icons/fa";
-
 import { useLogin } from "./hooks/useLogin";
 import Link from "next/link";
 
@@ -45,6 +44,7 @@ export default function Home() {
             type="text"
             onChange={(e) => onHandleChange(e)}
             placeholder="m@example.com"
+            autoFocus
           />
         </div>
         <div className="w-full">
@@ -72,7 +72,7 @@ export default function Home() {
             variant="white"
           />
         </div>
-        <div className="text-muted-foreground text-center text-sm">
+        <div className="text-muted-foreground text-center flex gap-3 text-sm">
           Don't have an account?
           <Link href="/register" className="underline underline-offset-4">
             Register

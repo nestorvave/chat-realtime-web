@@ -7,17 +7,21 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { setUser } from "@/app/store/modules/user.module";
 import { registerCase } from "@/app/domain/use-cases/register/register.use-case";
+import { IACase } from "@/app/domain/use-cases/ia/ia.use-case";
 
 export const useRegister = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { suggestionUser } = IACase();
+  const { registerUser } = registerCase();
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [rotated, setRotated] = useState(false);
   const [payload, setPayload] = useState({
     email: "",
     password: "",
     name: "",
   });
 
-  const { registerUser } = registerCase();
   const onHandleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -42,5 +46,32 @@ export const useRegister = () => {
     } catch (error) {}
   };
 
-  return { onAuthCredentials, onAuthGoogle, onHandleChange, payload };
+  const onBlur = async () => {
+    setRotated(true);
+    if (payload.email) {
+      try {
+        const response = await suggestionUser(payload.email, suggestions);
+        setSuggestions(response.split("/"));
+      } catch (error) {
+      } finally {
+        setRotated(false);
+      }
+    }
+  };
+
+  const suggestionSelected = (user: string) => {
+    setPayload({ ...payload, name: user });
+    setSuggestions([]);
+  };
+
+  return {
+    onAuthCredentials,
+    onAuthGoogle,
+    onBlur,
+    onHandleChange,
+    payload,
+    suggestions,
+    suggestionSelected,
+    rotated,
+  };
 };

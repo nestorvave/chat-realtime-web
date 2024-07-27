@@ -1,17 +1,25 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import TextInput from "../components/text-input/text-input.component";
 import Button from "../components/button/custom-button.component";
 import { LayoutLoginRegister } from "../components/layout-login/layout-login.component";
 import { useRegister } from "./hooks/useRegister";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa";
+import { TfiReload } from "react-icons/tfi";
 
 export default function Register() {
-  const { payload, onAuthCredentials, onAuthGoogle, onHandleChange } =
-    useRegister();
+  const {
+    onAuthCredentials,
+    onAuthGoogle,
+    onBlur,
+    onHandleChange,
+    payload,
+    suggestionSelected,
+    suggestions,
+    rotated,
+  } = useRegister();
   const { name, email, password } = payload;
- 
 
   return (
     <LayoutLoginRegister>
@@ -39,18 +47,6 @@ export default function Register() {
 
         <div className="w-full">
           <TextInput
-            value={name}
-            isRequired
-            id="name"
-            label="Username"
-            name="name"
-            type="text"
-            onChange={(e) => onHandleChange(e)}
-            placeholder=""
-          />
-        </div>
-        <div className="w-full">
-          <TextInput
             value={email}
             isRequired
             id="email"
@@ -59,6 +55,41 @@ export default function Register() {
             type="text"
             onChange={(e) => onHandleChange(e)}
             placeholder="m@example.com"
+            autoFocus
+            onBlur={onBlur}
+          />
+        </div>
+        {suggestions.length !== 0 && (
+          <div className="flex max-w-5/12 items-center justify-evenly gap-2">
+            {suggestions.map((user) => (
+              <span
+                className="cursor-pointer rounded-md bg-grayDark p-2"
+                onClick={() => suggestionSelected(user)}
+                key={user}
+              >
+                {user}
+              </span>
+            ))}
+            <span
+              onClick={onBlur}
+              className={`cursor-pointer rounded-lg p-2 transition-transform duration-500 hover:bg-gray-700 ${
+                rotated ? "rotate-180" : ""
+              }`}
+            >
+              <TfiReload className="text-whiteDark" />
+            </span>
+          </div>
+        )}
+        <div className="w-full">
+          <TextInput
+            value={name}
+            isRequired
+            id="name"
+            label="Username"
+            name="name"
+            type="text"
+            onChange={(e) => onHandleChange(e)}
+            placeholder=""
           />
         </div>
         <div className="w-full">
@@ -86,7 +117,7 @@ export default function Register() {
             variant="white"
           />
         </div>
-        <div className="text-muted-foreground text-center text-sm">
+        <div className="text-muted-foreground flex gap-3 text-center text-sm">
           Already have an account?
           <Link href="/" className="underline underline-offset-4">
             Login

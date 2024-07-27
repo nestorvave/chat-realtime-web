@@ -16,6 +16,7 @@ export interface ITextInput {
   disabled?: boolean;
   rows?: number;
   onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
 }
 const TextInput = (props: ITextInput) => {
   const {
@@ -33,6 +34,7 @@ const TextInput = (props: ITextInput) => {
     value,
     disabled = false,
     rows = 4,
+    onBlur,
     onKeyPress,
   } = props;
 
@@ -44,7 +46,7 @@ const TextInput = (props: ITextInput) => {
       {(label || isRequired) && (
         <label
           htmlFor={id}
-          className="mb-[8px] pl-1 block text-base text-white"
+          className="mb-[8px] block pl-1 text-base text-white"
         >
           {label}
           {isRequired && <span className="text-logo pl-1 text-xl">*</span>}
@@ -83,6 +85,7 @@ const TextInput = (props: ITextInput) => {
             style={{ outline: "none" }}
             disabled={disabled}
             onKeyDown={onKeyPress}
+            onBlur={onBlur}
           />
         )}
       </div>
