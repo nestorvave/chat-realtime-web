@@ -5,9 +5,12 @@ import { IMessage } from "@/app/domain/models/messages/messages.model";
 import { RootState } from "@/app/store";
 import React from "react";
 import { IoSend } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useChatbox } from "./hooks/useChatbox";
 import { GiFairyWand } from "react-icons/gi";
+import { IoIosArrowBack } from "react-icons/io";
+import { useRouter } from "next/navigation";
+import { resetSelectedChat } from "@/app/store/modules/selected-user.module";
 
 interface IChatBox {
   conversation_id: string;
@@ -15,6 +18,8 @@ interface IChatBox {
 
 export const ChatBox = ({ conversation_id }: IChatBox) => {
   const { _id } = useSelector((state: RootState) => state.users);
+  const router = useRouter();
+  const dispatch = useDispatch();
   const { socket } = useSocketContext();
   const chatSelected = useSelector((state: RootState) => state.selectedChat);
   const {
@@ -54,6 +59,15 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
   return (
     <main className="max-h-[99vh flex h-[99vh] w-full flex-col justify-between overflow-hidden pb-1 text-white">
       <section className="flex items-center gap-4 border-b border-gray-600 py-4">
+        <span
+          onClick={() => {
+            dispatch(resetSelectedChat());
+            router.push("/chat");
+          }}
+          className="cursor-pointer rounded-lg bg-gray-700 p-2 transition-transform duration-500 md:hidden"
+        >
+          <IoIosArrowBack className="text-2xl font-extrabold text-white" />
+        </span>
         <Avatar
           avatarUrl={chatSelected.avatarUrl || ""}
           username={chatSelected.name}
@@ -83,7 +97,7 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
 
       <section className="end-1 mt-auto flex w-full flex-col items-center justify-center px-5">
         {suggestions.length !== 0 && (
-          <section className="mb-4 flex w-full flex-col gap-2 transition-all ease-out ">
+          <section className="mb-4 flex w-full flex-col gap-2 transition-all ease-out">
             <h2 className="w-full text-left">Suggestions for you</h2>
             <div className="flex gap-2">
               {suggestions.map((suggestion) => (
@@ -102,7 +116,7 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
             </div>
           </section>
         )}
-        <section className="flex w-full">
+        <section className="flex w-full gap-3">
           <div className="w-full gap-6">
             <TextInput
               value={newMessage}

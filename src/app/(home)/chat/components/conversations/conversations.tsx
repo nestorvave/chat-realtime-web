@@ -60,7 +60,7 @@ export const Conversations = () => {
         className={
           selectedChat.name
             ? "hidden h-full pl-2 md:block md:w-[400px]"
-            : "w-[400px]"
+            : "md:w-[400px]"
         }
       >
         <section className="flex w-full flex-col justify-between gap-4 p-4">
