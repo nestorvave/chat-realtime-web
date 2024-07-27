@@ -32,8 +32,8 @@ export const ActionsBar = () => {
   ];
 
   return (
-    <nav className="flex h-screen w-20 flex-col items-center justify-between p-2">
-      <section className="mt-4 flex w-9/12 flex-col gap-4">
+    <nav className="flex items-center justify-between px-3 md:h-screen md:w-20 md:flex-col md:p-2">
+      <section className="mt-4 flex w-9/12 gap-4 md:flex-col">
         {links.map(({ link, icon, execute }) => (
           <Link
             className={`flex w-full cursor-pointer items-center justify-center rounded-lg p-3 text-2xl ${currentPath.startsWith(link) && link !== "/" ? "bg-grayDark text-whiteDark" : "text-grayDark hover:bg-grayDark hover:text-whiteDark"}`}
@@ -46,7 +46,7 @@ export const ActionsBar = () => {
           </Link>
         ))}
       </section>
-      <section className="mb-4 w-auto">
+      <section className="flex w-auto items-center justify-center md:mb-4">
         <Avatar
           avatarUrl={user.avatarUrl || ""}
           username={user.name}
