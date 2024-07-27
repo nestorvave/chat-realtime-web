@@ -8,10 +8,11 @@ import { resetUser } from "@/app/store/modules/user.module";
 import { deleteCookie } from "cookies-next";
 import { RootState } from "@/app/store";
 import { Avatar } from "@/app/components/avatar/avatar.component";
-
 import { IoExitOutline } from "react-icons/io5";
 import { resetSelectedChat } from "@/app/store/modules/selected-user.module";
 import { signOut } from "next-auth/react";
+
+
 export const ActionsBar = () => {
   const user = useSelector((state: RootState) => state.users);
   const currentPath = usePathname();
@@ -32,7 +33,7 @@ export const ActionsBar = () => {
   ];
 
   return (
-    <nav className="flex items-center justify-between px-3 md:h-screen md:w-20 md:flex-col md:p-2">
+    <nav className="mt-3 flex items-center justify-between border-t border-grayDark px-3 md:mt-0 md:h-screen md:w-20 md:flex-col md:border-r md:p-2">
       <section className="mt-4 flex w-9/12 gap-4 md:flex-col">
         {links.map(({ link, icon, execute }) => (
           <Link

@@ -59,8 +59,8 @@ export const Conversations = () => {
       <main
         className={
           selectedChat.name
-            ? "hidden h-full pl-2 md:block md:w-[400px]"
-            : "md:w-[400px]"
+            ? "hidden h-full pl-2 md:block md:h-screen md:w-[400px] md:border-r md:border-grayDark"
+            : "md:w-[400px] md:border-r md:border-grayDark"
         }
       >
         <section className="flex w-full flex-col justify-between gap-4 p-4">
