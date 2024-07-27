@@ -50,14 +50,14 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
 
   const messageJsx = (owner: string, message: string) => (
     <span
-      className={`max-w-[200px] overflow-ellipsis text-balance break-words rounded-3xl p-4 md:max-w-[400px] ${owner === _id ? "bg-whiteDark text-mainDark" : "bg-grayDark text-whiteDark"}`}
+      className={`max-w-[200px]  overflow-ellipsis text-balance break-words rounded-3xl p-4 md:max-w-[400px] ${owner === _id ? "bg-whiteDark text-mainDark" : "bg-grayDark text-whiteDark"}`}
     >
       {message}
     </span>
   );
 
   return (
-    <main className="max-h-[99vh flex h-[99vh] w-full flex-col justify-between overflow-hidden pb-1 text-white">
+    <main className="flex h-[93vh] w-full flex-col justify-between overflow-hidden pb-1 text-white md:h-[99vh] md:max-h-[99vh]">
       <section className="flex items-center gap-4 border-b border-gray-600 py-4">
         <span
           onClick={() => {

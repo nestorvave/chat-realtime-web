@@ -6,7 +6,7 @@ import { AppWrapper } from "./context/socket.context";
 export default function layout({ children }: { children: ReactNode }) {
   return (
     <AppWrapper>
-      <main className="max-w-screen flex flex-col-reverse md:w-screen md:flex-row">
+      <main className="max-w-screen h-screen flex flex-col-reverse md:w-screen md:flex-row">
         <ActionsBar />
         <section className="w-full">{children}</section>
       </main>
