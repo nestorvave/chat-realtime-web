@@ -11,6 +11,7 @@ import _ from "lodash";
 import { useRouter } from "next/navigation";
 
 export const useConversations = (socket: Socket | null) => {
+  const notificationSound = new Audio("/single_ping.mp3");
   const dispatch = useDispatch();
   const router = useRouter();
   const [conversations, setConversations] = useState<IConversation[]>([]);
@@ -96,18 +97,27 @@ export const useConversations = (socket: Socket | null) => {
 
   useEffect(() => {
     const handleMessage = (response: any) => {
-      setConversations((prevConversations) =>
-        prevConversations.map((conversation) =>
-          conversation._id === response.conversation_id
-            ? {
-                ...conversation,
-                last_message: response.message,
-                updatedAt: new Date().toISOString(),
-              }
-            : conversation,
-        ),
-      );
+      setConversations((prevConversations) => {
+        const updatedConversations = prevConversations.map((conversation) => {
+          if (conversation._id === response.conversation_id) {
+            if (response.owner !== _id)
+              notificationSound.play().catch((error) => {
+                console.error("Error al reproducir el sonido:", error);
+              });
+
+            return {
+              ...conversation,
+              last_message: response.message,
+              updatedAt: new Date().toISOString(),
+            };
+          }
+          return conversation;
+        });
+
+        return updatedConversations;
+      });
     };
+
     if (socket) {
       socket.on("message", handleMessage);
     }
