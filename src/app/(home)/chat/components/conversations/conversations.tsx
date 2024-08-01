@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedChat } from "@/app/store/modules/selected-user.module";
@@ -10,8 +10,7 @@ import { LiaHashtagSolid } from "react-icons/lia";
 import Link from "next/link";
 import { useSocketContext } from "@/app/(home)/context/socket.context";
 import { Avatar } from "@/app/components/avatar/avatar.component";
-import { Modal } from "@/app/components/modal/modal.component";
-import TextInput from "@/app/components/text-input/text-input.component";
+import { GroupModal } from "./components/group-modal.components";
 
 export const Conversations = () => {
   const { socket } = useSocketContext();
@@ -36,26 +35,14 @@ export const Conversations = () => {
 
   return (
     <>
-      <Modal
-        title="Create a group chat"
-        subtitle="Create a chat with more than 2 people."
-        onClose={() => setOpen(false)}
-        onSave={createRoom}
+      <GroupModal
+        createRoom={createRoom}
+        group={group}
         open={open}
-      >
-        <div className="flex flex-col gap-6 px-4 pb-8">
-          <TextInput
-            value={group}
-            isRequired
-            id="groupName"
-            label="Group name"
-            name="groupName"
-            type="text"
-            onChange={(e) => setGroup(e.target.value)}
-            placeholder=""
-          />
-        </div>
-      </Modal>
+        setGroup={setGroup}
+        setOpen={setOpen}
+      />
+
       <main
         className={
           selectedChat.name

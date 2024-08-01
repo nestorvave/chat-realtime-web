@@ -31,11 +31,11 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
     chatRef,
     setSuggestions,
   } = useChatbox(socket, conversation_id);
-
   const getUserInfo = (userAgent: string) => {
     const user = chatSelected?.recipients?.find(
       (user) => user._id === userAgent,
     );
+
     return (
       <div className="flex items-center gap-3">
         <Avatar
@@ -68,6 +68,7 @@ export const ChatBox = ({ conversation_id }: IChatBox) => {
         >
           <IoIosArrowBack className="text-2xl font-extrabold text-white" />
         </span>
+
         <Avatar
           avatarUrl={chatSelected.avatarUrl || ""}
           username={chatSelected.name}

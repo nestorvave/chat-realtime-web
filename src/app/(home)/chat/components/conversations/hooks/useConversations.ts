@@ -22,19 +22,24 @@ export const useConversations = (socket: Socket | null) => {
   const { getRooms } = roomsCase();
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const [group, setGroup] = useState<string>("");
+  const [group, setGroup] = useState<{ users: string[]; name: string }>({
+    users: [],
+    name: "",
+  });
   const [online, setOnline] = useState<string[]>([]);
 
   const createRoom = () => {
     const payload = {
       owner: _id,
-      users: ["669230973df8b020749a79f1", "669cab1ac1e3bbede9025c93"],
-      name: group,
+      users: [...group.users, _id],
+      name: group.name,
     };
     socket?.emit("join-room", JSON.stringify(payload));
-    setGroup("");
+    setGroup({
+      users: [],
+      name: "",
+    });
     setOpen(false);
-    getMyRooms();
   };
 
   const getRecipient = (conversation: IConversation) => {
@@ -128,9 +133,17 @@ export const useConversations = (socket: Socket | null) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("room-created", (response: string) => {
-        setOpen(false);
-        router.push(`/chat/${response}`);
+      socket.on("room-created", (response: IRoom) => {
+        router.push(`/chat/${response._id}`);
+        dispatch(
+          setSelectedChat({
+            _id: response?._id,
+            isRoom: true,
+            name: response?.name || "",
+            recipients: response?.users,
+          }),
+        );
+        getMyRooms();
       });
     }
   }, [socket]);

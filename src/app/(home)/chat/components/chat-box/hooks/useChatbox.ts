@@ -67,18 +67,15 @@ export const useChatbox = (socket: Socket | null, conversation_id: string) => {
       socket.on("message", async (response: any) => {
         if (
           response.owner !== _id &&
-          conversation_id === response.conversation_id
+          (conversation_id === response.conversation_id ||
+            conversation_id === response.room_id)
         ) {
-          console.log(messages);
-
-          console.log(response);
           const lastMessages = await getLastMessages([...messages]);
           const iaResponse = await suggestionMsgResponse(
             lastMessages,
             response.message,
           );
           setSuggestions(iaResponse.split("/"));
-
           setMessages((prev: any) => [
             ...prev,
             {

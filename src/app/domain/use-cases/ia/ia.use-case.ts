@@ -10,7 +10,6 @@ export function IACase() {
     lastMessages: string,
     message: string,
   ) => {
-    console.log("loading....");
     const prompt = `Mi aplicacion es un chat tipo whatsapp, messenger, lo que quiero es que me des sugerencias de respuestas
      a los mensajes que me vayan enviando,las sugerencias deben ser muy cortas, a los mensajes que 
      le daras sugerencias de respuesta sera a este ultimo mensaje "${message}" y el contexto de la conversacion es esto que son
@@ -27,7 +26,6 @@ export function IACase() {
     return text;
   };
   const suggestionUser = async (email: string, suggestions?: string[]) => {
-    console.log("loading users....");
     const prompt = `tengo una pantalla de login donde vienen los campos email y username, lo que quiero dado a un email me sugieras username que el usuario 
 	puede gustarle para nombre de username, el email que ingreso el usuario es: ${email}" el usuario debe ser supercorto ya que lo debe recordar para toda la vida
 	quiero que me devuelvas 4 recomendaciones incluso dividas entre un slash (/), dividir la respuesta con el slash es muy importante

@@ -3,12 +3,14 @@ import React from "react";
 import { useUsers } from "../hooks/useUsers";
 import TextInput from "@/app/components/text-input/text-input.component";
 import { Avatar } from "@/app/components/avatar/avatar.component";
+import { useGetUsers } from "@/app/hooks/useGetUsers";
 
 export const UserList = () => {
-  const { users, search, setSearch, createConversation } = useUsers();
-
+  const { search, setSearch, createConversation } = useUsers();
+  const users = useGetUsers();
+  
   return (
-    <main className="h-full w-full md:w-[400px] pl-2">
+    <main className="h-full w-full pl-2 md:w-[400px]">
       <section className="flex w-full flex-col gap-4 p-4">
         <h1 className="pl-2 text-2xl text-white">People</h1>
         <TextInput

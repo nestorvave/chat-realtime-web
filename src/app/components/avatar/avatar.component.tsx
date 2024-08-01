@@ -51,7 +51,7 @@ export const Avatar = ({
     "bg-[#4595DE]", 
     "bg-[#F1C51F]", 
   ];
-    const index = name.length % colors.length;
+    const index = name?.length % colors?.length;
     return colors[index];
   };
   const usernameColor = getUsernameColor(username);
