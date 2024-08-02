@@ -10,7 +10,9 @@ const nonAuthRoutes = ["/register", "/"];
 export default function middleware(req: NextRequest) {
   const cookieStore = cookies();
   const isAuthenticated =
-    cookieStore.get("token") || cookieStore.get("next-auth.session-token");
+    cookieStore.get("token") ||
+    cookieStore.get("next-auth.session-token") ||
+    cookieStore.get("_vercel_jwt");
 
   const path = req.nextUrl.pathname;
   if (isAuthenticated && nonAuthRoutes.includes(req.nextUrl.pathname)) {
