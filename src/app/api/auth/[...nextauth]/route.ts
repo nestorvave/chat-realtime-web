@@ -11,6 +11,7 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
+  secret: process.env.GOOGLE_CLIENT_SECRET,
   callbacks: {
     async session({ session }) {
       const { user } = session;
@@ -20,7 +21,7 @@ const handler = NextAuth({
             email: user.email,
             avatarUrl: user.image,
             name: user.name,
-            password: "zizu",
+            password: "1234",
             isGoogle: true,
           });
           const cookieStore = cookies();
