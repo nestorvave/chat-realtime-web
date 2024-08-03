@@ -37,7 +37,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const token = getCookie("token");
 
-    const connection = socketIOClient("http://localhost:4000", {
+    const connection = socketIOClient(process.env.NEXT_PUBLIC_BACKEND || "", {
       query: {
         token: token,
       },
