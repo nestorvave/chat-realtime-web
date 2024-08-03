@@ -1,5 +1,4 @@
 import { loginAction } from "@/actions/login/login.action";
-import { setCookie } from "cookies-next";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import { cookies } from "next/headers";
@@ -15,6 +14,7 @@ const handler = NextAuth({
   callbacks: {
     async session({ session }) {
       const { user } = session;
+      console.log(user)
       if (user) {
         try {
           const userN = await loginAction({
@@ -24,6 +24,7 @@ const handler = NextAuth({
             password: "1234",
             isGoogle: true,
           });
+          console.log(userN)
           const cookieStore = cookies();
           cookieStore.set("token", userN?.token);
           return userN;
