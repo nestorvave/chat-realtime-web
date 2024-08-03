@@ -1,7 +1,12 @@
 "use server";
 
 export async function loginAction(body: any) {
-  const response = await fetch("http://localhost:4000/api/v1/auth/login", {
+  const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+  if (!apiUrl) {
+    throw new Error("API URL is not defined in environment variables");
+  }
+  const response = await fetch(`${apiUrl}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
